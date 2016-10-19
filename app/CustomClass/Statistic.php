@@ -79,24 +79,35 @@ namespace App\CustomClass{
             );
         }*/
 		
+		/*
+			TODO: Update this every 12h. Use temporary table for it?
+			TODO: NEED OPTIMIZING. IT TAKES A VERY LONG WAIT
+		*/
+		
 		public function getHardestTable(){
             return DB::select(
                 DB::raw(
-                    'SELECT problemId, numOfUser, numOfFinishedUser, ratio FROM
-						(SELECT tab1.problemId, tab1.numOfUser, tab2.numOfFinishedUser, COALESCE((tab2.numOfFinishedUser/tab1.numOfUser),-1) as ratio
-						FROM (select problemId, count(userId) as numOfUser from(
-											select problems.problemId, submissions.userId, max(submissions.resultScore) as userScore, submissions.courseId, problems.defaultScore
+                    'SELECT tab11.problemId, problemCode, courseId, numOfUser, numOfFinishedUser, tab11.ratio FROM
+						(SELECT tab1.problemId, tab1.problemCode, tab1.numOfUser, tab2.numOfFinishedUser, COALESCE((tab2.numOfFinishedUser/tab1.numOfUser),-1) as ratio
+						FROM (select problemId, problemCode, count(userId) as numOfUser from(
+											select problems.problemId, problems.problemCode, submissions.userId, max(submissions.resultScore) as userScore, submissions.courseId, problems.defaultScore
 											from problems left join submissions on problems.problemId = submissions.problemId
 											group by problems.problemId, submissions.userId) as s
 										group by problemId) as tab1
-						LEFT OUTER JOIN (select problems.problemId as problemId, count(s.userId) as numOfFinishedUser from(
+						LEFT OUTER JOIN (select problems.problemId as problemId, count(s.userId)
+											as numOfFinishedUser from(
 											select problems.problemId, submissions.userId, max(submissions.resultScore) as userScore, submissions.courseId, problems.defaultScore
 											from problems left join submissions on problems.problemId = submissions.problemId
 											group by problems.problemId, submissions.userId having userScore = defaultScore) as s
 											right join problems on s.problemId = problems.problemId
 											group by problems.problemId) as tab2
-						ON tab1.problemId=tab2.problemId) as mytab
-					WHERE mytab.ratio > 0
+						ON tab1.problemId=tab2.problemId
+						WHERE tab1.numOfUser > 40) as tab11
+					LEFT JOIN (SELECT problemId, courseId, isActive
+						FROM courseproblems
+						WHERE isActive=1) AS tab12
+					ON tab11.problemId=tab12.problemId
+					WHERE tab11.ratio > 0 AND courseId IS NOT NULL
 					ORDER BY ratio'
                 )
             );
@@ -111,42 +122,53 @@ namespace App\CustomClass{
 						GROUP BY courseId) AS tab1
 					LEFT JOIN
 						(SELECT courseId, courseName
-						FROM courses) AS tab2
+						FROM courses
+						WHICH isActive = 1) AS tab2
 					ON tab1.courseId = tab2.courseId'
                 )
             );
         }
 		
+		/*
+			Explain:
+			- Get all courses with isActive = 1
+			- Then get all problems with isActive = 1 in those courses:
+				courseproblems LEFT JOIN above = tab1
+			- Get your courses => tab2
+				tab1 LEFT JOIN tab2 = all problems you're having
+			- Get list of my submitted problems
+				RIGHT JOIN with above table; count NULL row => result
+		*/
 		public function getNumOfUnsubmit(){
 			$row = DB::select(
 				DB::raw(
-'SELECT COUNT(probId) AS result FROM
-	(SELECT probId, tab1.courseId, isActive
-	FROM (SELECT tab1.courseId, tab1.problemId AS probId, isAct  FROM
-					(SELECT courseproblems.courseId, problemId, isAct
-					FROM courseproblems
-					LEFT JOIN (SELECT courseId, isActive as isAct
-						FROM courses
-						WHERE isActive = 1) AS coursesTab
-					ON courseproblems.courseId = coursesTab.courseId
-					WHERE courseproblems.isActive = 1 AND isAct IS NOT NULL
-					) AS tab1
-				LEFT JOIN
-					(SELECT courseId, userId
-					FROM courseusers
-					WHERE userId = '.Auth::user()->userId.'
-					) AS tab2
-				ON tab1.courseId = tab2.courseId
-				WHERE userId IS NOT NULL
-		) AS tab1
-	LEFT JOIN (SELECT problemId, userId, isActive FROM submissions
-		WHERE userId = '.Auth::user()->userId.'
-		GROUP BY problemId)
-		AS tab2
-	ON probId = tab2.problemId
-	WHERE userId IS NULL
-	GROUP BY tab2.problemId)
-AS mytab'
+					'SELECT COUNT(probId) AS result FROM
+						(SELECT probId, tab1.courseId, isActive
+						FROM (SELECT tab1.courseId, tab1.problemId AS probId, isAct  FROM
+										(SELECT courseproblems.courseId, problemId, isAct
+										FROM courseproblems
+										LEFT JOIN (SELECT courseId, isActive as isAct
+											FROM courses
+											WHERE isActive = 1) AS coursesTab
+										ON courseproblems.courseId = coursesTab.courseId
+										WHERE courseproblems.isActive = 1 AND isAct IS NOT NULL
+										) AS tab1
+									LEFT JOIN
+										(SELECT courseId, userId
+										FROM courseusers
+										WHERE userId = '.Auth::user()->userId.'
+										) AS tab2
+									ON tab1.courseId = tab2.courseId
+									WHERE userId IS NOT NULL
+							) AS tab1
+						LEFT JOIN (SELECT problemId, userId, isActive FROM submissions
+							WHERE userId = '.Auth::user()->userId.'
+							GROUP BY problemId)
+							AS tab2
+						ON probId = tab2.problemId
+						WHERE userId IS NULL
+						GROUP BY tab2.problemId)
+					AS mytab'
 				)
 			);
 			return ($row[0]->result);

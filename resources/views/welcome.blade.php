@@ -322,14 +322,20 @@
                                                 </tr>
                                                 </thead>
                                                 @foreach($hardestTable as $probleme)
+												<?php if (strpos($probleme->problemCode, 'TEST') !== false) continue; 
+														if ($countProbleme==11) break;?>
                                                     <tr>
                                                         <td>
                                                             <a href="javascript:;"
                                                                class="primary-link">{{$countProbleme}}</a>
                                                         </td>
-                                                        <td> {{$probleme->problemId}}</td>
+                                                        <td> 
+															<a href="/my-courses/{{$probleme->courseId}}/problems/{{$probleme->problemId}}">
+																{{$probleme->problemCode}}
+															</a>
+														</td>
                                                         <td>
-                                                            {{$probleme->ratio}}
+                                                            {{$probleme->numOfFinishedUser}}/{{$probleme->numOfUser}}={{$probleme->ratio}}
                                                         </td>
                                                     </tr>
 												<?php $countProbleme = $countProbleme + 1; ?>

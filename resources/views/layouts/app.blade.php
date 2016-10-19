@@ -110,7 +110,7 @@
         <!-- END RESPONSIVE MENU TOGGLER -->
         <!-- BEGIN PAGE ACTIONS -->
         <!-- DOC: Remove "hide" class to enable the page header actions -->
-        <div class="page-actions">
+        <!--div class="page-actions">
             <div class="btn-group">
                 <button type="button" class="btn btn-circle btn-outline red dropdown-toggle" data-toggle="dropdown">
                     <i class="fa fa-plus"></i>&nbsp;
@@ -145,7 +145,7 @@
                     </li>
                 </ul>
             </div>
-        </div>
+        </div-->
         <!-- END PAGE ACTIONS -->
         <!-- BEGIN PAGE TOP -->
         <div class="page-top">
@@ -219,7 +219,7 @@
             <!-- DOC: Set data-auto-speed="200" to adjust the sub menu slide up/down speed -->
             <ul class="page-sidebar-menu  page-header-fixed page-sidebar-menu-hover-submenu " data-keep-expanded="false"
                 data-auto-scroll="true" data-slide-speed="200">
-                <li class="nav-item start active open">
+                <li class="nav-item active open">
                     <a href="{{url('/')}}" class="nav-link nav-toggle">
                         <i class="icon-home"></i>
                         <span class="title">Dashboard</span>
@@ -229,7 +229,7 @@
                 </li>
                 <li class="nav-item ">
                     <a href="{{url('/my-courses')}}" class="nav-link nav-toggle">
-                        <i class="icon-diamond"></i>
+                        <i class="icon-notebook"></i>
                         <span class="title">Courses</span>
                         <span class="arrow"></span>
                     </a>
@@ -246,15 +246,13 @@
                         </li>
                     </ul>
                 </li>
-
                 <li class="nav-item  ">
                     <a href="{{url('/exams')}}" class="nav-link nav-toggle">
-                        <i class="icon-diamond"></i>
+                        <i class="icon-note"></i>
                         <span class="title">Exams</span>
                         <span class="arrow"></span>
                     </a>
                 </li>
-
             </ul>
             <!-- END SIDEBAR MENU -->
         </div>
