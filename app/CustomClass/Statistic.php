@@ -123,8 +123,9 @@ namespace App\CustomClass{
 					LEFT JOIN
 						(SELECT courseId, courseName
 						FROM courses
-						WHICH isActive = 1) AS tab2
-					ON tab1.courseId = tab2.courseId'
+						WHERE isActive=1) AS tab2
+					ON tab1.courseId = tab2.courseId
+					WHERE tab2.courseName IS NOT NULL'
                 )
             );
         }
