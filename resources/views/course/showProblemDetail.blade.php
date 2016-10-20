@@ -158,6 +158,7 @@
 
         $(document).ready(function () {
 			var ajaxGetTimes = 0;
+			var blockSubmitBtn = false;
             $('#mytabs').tabs();
             $('#result').load('{{url(Request::path().'/submissionTable')}}');
 
@@ -177,41 +178,50 @@
 					ajaxGetTimes = 0;
 				}
 			}
+			
+			function unblockSubmitBtn() {
+				blockSubmitBtn = false;
+			}
 
             $('#frmSubmit').submit(function () {
-                var _sourceCode = $('#source_code').val();
-                var _language = $('#language').val();
-                $.ajax({
-                    type: "POST",
-                    url: "{{url('/submitPostAjax')}}",
-                    timeout: 5000,
-                    data: {
-                        sourceCode: _sourceCode,
-                        language: _language,
-                        courseId: {{$courseId}},
-                        problemId: {{$problem->problemId}},
-                        problemCode: '{{$problem->problemCode}}'
-                    },
-                    success: function (data) {
-                        console.log(data);//
-                        if (data == 'OK') {
-                            //alert('submit OK');
-                            $('#mytabs').tabs("option", "active", 1);
-							getSubmissionTable();
-                            toastr.success("Submission notifications", "Your submission is sent successfully");
-                        } else {
-                            //alert('something wrong');
-							getSubmissionTable();
-                            toastr.error("Submission notifications", "Error to submit submission");
-                        }
-
-                    },
-                    error: function (xhr, ajaxOptions, thrownError) {
-                        alert(xhr.status);
-                        alert(ajaxOptions);
-                        alert(thrownError);
-                    }
-                });
+				if (!blockSubmitBtn) {
+					blockSubmitBtn = true;
+					setTimeout(unblockSubmitBtn, 5000);
+					
+					var _sourceCode = $('#source_code').val();
+					var _language = $('#language').val();
+					$.ajax({
+						type: "POST",
+						url: "{{url('/submitPostAjax')}}",
+						timeout: 5000,
+						data: {
+							sourceCode: _sourceCode,
+							language: _language,
+							courseId: {{$courseId}},
+							problemId: {{$problem->problemId}},
+							problemCode: '{{$problem->problemCode}}'
+						},
+						success: function (data) {
+							console.log(data);//
+							if (data == 'OK') {
+								//alert('submit OK');
+								$('#mytabs').tabs("option", "active", 1);
+								getSubmissionTable();
+								toastr.success("Submission notifications", "Your submission is sent successfully");
+							} else {
+								//alert('something wrong');
+								getSubmissionTable();
+								toastr.error("Submission notifications", "Error to submit submission");
+							}
+	
+						},
+						error: function (xhr, ajaxOptions, thrownError) {
+							alert(xhr.status);
+							alert(ajaxOptions);
+							alert(thrownError);
+						}
+					});
+				}
             });
         });
     </script>
