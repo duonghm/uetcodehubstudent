@@ -157,17 +157,26 @@
         });
 
         $(document).ready(function () {
+			var ajaxGetTimes = 0;
             $('#mytabs').tabs();
-            $('#result').load('{{url(Request::path().'/submissionTable')}}')
+            $('#result').load('{{url(Request::path().'/submissionTable')}}');
 
-            $(function () {
-                function callAjax() {
-                    console.log('{{url(Request::path().'/submissionTable')}}');
-                    $('#result').load('{{url(Request::path().'/submissionTable')}}')
-                }
-
-                setInterval(callAjax, 5000);
-            });
+            function refreshSubmissionTable() {
+				ajaxGetTimes++;
+				if (ajaxGetTimes < 4) {
+					//console.log(ajaxGetTimes+'{{url(Request::path().'/submissionTable')}}');
+					$('#result').load('{{url(Request::path().'/submissionTable')}}');
+					setTimeout(refreshSubmissionTable, 5000);
+				}
+            }
+			
+			function getSubmissionTable() {
+				if (ajaxGetTimes == 0) {
+					refreshSubmissionTable();
+				} else {
+					ajaxGetTimes = 0;
+				}
+			}
 
             $('#frmSubmit').submit(function () {
                 var _sourceCode = $('#source_code').val();
@@ -188,9 +197,11 @@
                         if (data == 'OK') {
                             //alert('submit OK');
                             $('#mytabs').tabs("option", "active", 1);
+							getSubmissionTable();
                             toastr.success("Submission notifications", "Your submission is sent successfully");
                         } else {
                             //alert('something wrong');
+							getSubmissionTable();
                             toastr.error("Submission notifications", "Error to submit submission");
                         }
 
