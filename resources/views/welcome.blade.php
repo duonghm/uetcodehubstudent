@@ -330,7 +330,7 @@
                                                                class="primary-link">{{$countProbleme}}</a>
                                                         </td>
                                                         <td> 
-															<a href="/my-courses/{{$probleme->courseId}}/problems/{{$probleme->problemId}}">
+															<a href="{{url('/my-courses/'.$probleme->courseId.'/problems/'.$probleme->problemId)}}">
 																{{$probleme->problemCode}}
 															</a>
 														</td>

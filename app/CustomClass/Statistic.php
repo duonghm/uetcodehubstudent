@@ -136,16 +136,17 @@ namespace App\CustomClass{
 			- Then get all problems with isActive = 1 in those courses:
 				courseproblems LEFT JOIN above = tab1
 			- Get your courses => tab2
-				tab1 LEFT JOIN tab2 = all problems you're having
-			- Get list of my submitted problems
-				RIGHT JOIN with above table; count NULL row => result
+				tab1 LEFT JOIN tab2 = all problems you're having (tab11)
+			- Get list of my submitted problems (tab12)
+				tab11 LEFT JOIN tab12
+				count NULL rows => unsubmitted problems
 		*/
 		public function getNumOfUnsubmit(){
 			$row = DB::select(
 				DB::raw(
-					'SELECT COUNT(probId) AS result FROM
-						(SELECT probId, tab1.courseId, isActive
-						FROM (SELECT tab1.courseId, tab1.problemId AS probId, isAct  FROM
+					'SELECT COUNT(problemId) AS result FROM
+						(SELECT tab11.problemId, tab11.courseId
+						FROM (SELECT tab1.problemId, tab1.courseId, isAct  FROM
 										(SELECT courseproblems.courseId, problemId, isAct
 										FROM courseproblems
 										LEFT JOIN (SELECT courseId, isActive as isAct
@@ -161,14 +162,13 @@ namespace App\CustomClass{
 										) AS tab2
 									ON tab1.courseId = tab2.courseId
 									WHERE userId IS NOT NULL
-							) AS tab1
+							) AS tab11
 						LEFT JOIN (SELECT problemId, userId, isActive FROM submissions
 							WHERE userId = '.Auth::user()->userId.'
 							GROUP BY problemId)
-							AS tab2
-						ON probId = tab2.problemId
-						WHERE userId IS NULL
-						GROUP BY tab2.problemId)
+							AS tab12
+						ON tab11.problemId = tab12.problemId
+						WHERE userId IS NULL)
 					AS mytab'
 				)
 			);
