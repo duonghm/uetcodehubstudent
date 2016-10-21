@@ -21,7 +21,7 @@
             toastr.success("Gnome & Growl type non-blocking notifications", "Toastr Notifications");
         });
 
-		showAnimation(".animate", "fadeInUp");
+		showAnimation(".animate", "fadeInRight");
 		
 		function animateView(element, delay, animClass) {
 			setTimeout(function() {

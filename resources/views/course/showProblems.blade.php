@@ -4,9 +4,35 @@
 	{{--Môn học ...--}}
 {{--@endsection--}}
 
+@section('script')
+    <script type="text/javascript">
+        $('#btn').click(function () {
+            toastr.success("Gnome & Growl type non-blocking notifications", "Toastr Notifications");
+        });
+
+		showAnimation(".animate", "fadeInRight");
+		
+		function animateView(element, delay, animClass) {
+			setTimeout(function() {
+				element.addClass(animClass+' animated');
+				element.css({"opacity": "1"});
+			}, delay);
+		}
+		
+		function showAnimation(elemClass, animClass) {
+			var del = 0;
+			$(elemClass).each( function() {
+				del += 100;
+				$(this).css({"opacity": "0"});
+				animateView($(this), del, animClass);
+			});
+		}
+    </script>
+@endsection
+
 @section('content')
 
-	<div class="portlet light portlet-fit full-height-content full-height-content-scrollable ">
+	<div class="animate portlet light portlet-fit full-height-content full-height-content-scrollable ">
 		<div class="portlet-title">
 			<div class="caption">
 				<i class=" icon-layers font-green"></i>
@@ -22,7 +48,7 @@
 		$startIndex = ($problems->currentPage()-1) * $problems->perPage();
 		$problemscore = $p->getScoreOfUser($course->courseId);
 	@endphp
-	<div class="portlet light">
+	<div class="animate portlet light">
 		<div class="portlet-body">
 			<div class="row">
 				<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 col-xs-12">
