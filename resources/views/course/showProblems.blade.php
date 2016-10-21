@@ -1,75 +1,66 @@
 @extends('layouts.app')
 
 {{--@section('pageTitle')--}}
-    {{--Môn học ...--}}
+	{{--Môn học ...--}}
 {{--@endsection--}}
 
 @section('content')
 
-    <div class="portlet light portlet-fit full-height-content full-height-content-scrollable ">
-        <div class="portlet-title">
-            <div class="caption">
-                <i class=" icon-layers font-green"></i>
-                <span class="caption-subject font-green bold uppercase">{{$course->courseName}}</span>
-            </div>
-        </div>
-        <div class="portlet-body">
-            @if(sizeof($problems) > 0)
-                <div class="table-scrollable table-scrollable-borderless">
-                    <div style="text-align: center">{!! $problems->render() !!}</div>
-                    <table class="table table-hover table-light">
-                        <thead>
-                        <tr>
-                            <th width="10%">Thứ tự</th>
-                            {{--<th>Tag value</th>--}}
-                            {{--<th>Độ khó</th>--}}
-                            <th width="20%">Mã bài</th>
-                            <th width="10%">Điểm tối đa</th>
-                            <th width="10%">Đã nộp</th>
-                            <th width="10%">Đã hoàn thành</th>
-                            <th width="30%">Điểm hiện tại</th>
-                        </tr>
-                        <tbody>
-                        @foreach($problems as $index=>$p)
-                            <tr>
-                                @php
-                                    $startIndex = ($problems->currentPage()-1) * $problems->perPage();
-                                @endphp
-                                <td><a href="{{url(Request::path().'/'.$p->problemId)}}">Bài {{$startIndex + $index + 1}}</a></td>
-                                {{--<td width="300px">{{$p->tagValues}}</td>--}}
-                                {{--<td>{{$p->pivot->hardLevel}}</td>--}}
-                                <td>{{$p->problemCode}}</td>
-                                <td>{{$p->defaultScore}}</td>
-                                <td>{{$p->numberOfSubmitedUser2()}} người</td>
-                                @php
-                                    $problemScore = $p->getScoreOfUser($course->courseId);
-                                @endphp
-                                <td>
-                                    {{$p->numberOfFinishedUser2()}} người
-                                </td>
-                                <td>
-                                    @if($problemScore == null)
-                                        <span style="color:#bf3030; font-weight: bold">Chưa nộp bài</span>
-                                    @elseif($problemScore == $p->defaultScore)
-                                        <span style="color: #1b8b5c; font-weight: bold">Hoàn thành ({{$problemScore}})</span>
-                                    @else
-                                        <span style="color: gray; font-weight: bold">Còn sai sót ({{$problemScore}})</span>
-                                    @endif
-                                </td>
-                            </tr>
-                        @endforeach
-                        </tbody>
-                        </thead>
-                    </table>
-                    <div style="text-align: center">{!! $problems->render() !!}</div>
-                </div>
-            @else
-                Chưa có bài tập nào!
-            @endif
-
-        </div>
-    </div>
-
+	<div class="portlet light portlet-fit full-height-content full-height-content-scrollable ">
+		<div class="portlet-title">
+			<div class="caption">
+				<i class=" icon-layers font-green"></i>
+				<span class="caption-subject font-green bold uppercase">{{$course->courseName}}</span>
+			</div>
+		</div>
+		<div style="text-align: center">{!! $problems->render() !!}</div>
+	</div>
+	<br/>
+@if(sizeof($problems) > 0)
+@foreach($problems as $index=>$p)
+	<div class="portlet light">
+		<div class="portlet-body">
+			<div class="row">
+				<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 col-xs-12">
+					<div class="table-scrollable table-scrollable-borderless">
+						@php
+							$startIndex = ($problems->currentPage()-1) * $problems->perPage();
+							$problemScore = $p->getScoreOfUser($course->courseId);
+						@endphp
+						<b><a href="{{url(Request::path().'/'.$p->problemId)}}">Exer. {{$startIndex + $index + 1}} | {{$p->tagValues}}DUONG_P6_0043</a></b><br/>
+						{{--<td width="300px">{{$p->tagValues}}</td>--}}
+						{{--<td>{{$p->pivot->hardLevel}}</td>--}}
+						Submitted: {{$p->numberOfSubmitedUser2()}} users<br/> 
+						Finished: {{$p->numberOfFinishedUser2()}} users<br/>
+						<br/>
+						<button type="button"
+							onclick="document.location = '{{url(Request::path().'/'.$p->problemId)}}';"
+						@if($problemScore == null)
+							class="btn btn-primary" > SOLVE THIS PROBLEM </button>
+						@elseif($problemScore == $p->defaultScore)
+							class="btn btn-success" > <i class="fa fa-check"></i> REVIEW </button>
+						@else
+							class="btn btn-primary" > TRY AGAIN ({{$problemScore}}) </button>
+						@endif
+					</div>
+				</div>
+				<div class="col-lg-8 col-md-8 col-sm-8 hidden-xs hidden-xxs">
+						@php
+							$summary = strip_tags($p->content);
+						@endphp
+						{!! substr($summary, 0, 400) !!}
+						@if(strlen($summary) >= 400)
+							...
+						@endif
+				</div>
+			</div>
+		</div>
+	</div>
+	@endforeach
+	<div style="text-align: center">{!! $problems->render() !!}</div>
+@else
+	Chưa có bài tập nào!
+@endif
 
 
 @endsection
