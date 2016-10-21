@@ -21,13 +21,19 @@
             toastr.success("Gnome & Growl type non-blocking notifications", "Toastr Notifications");
         });
 		
-		var num_of_anim = 10;
-		var i,del=100;
-		for (i=0; i<=num_of_anim; i++) {
-			del += 100;
-			$($(".animate")[i]).hide();
-			$($(".animate")[i]).delay(del).fadeIn();
+		function animateView(element, delay) {
+			setTimeout(function() {
+				element.addClass('fadeInUp animated');
+			}, delay);
 		}
+		
+		//Fade in animation
+		var del = 0;
+		$(".animate").each( function() {
+			del += 100;
+			$(this).css({"opacity": "0"});
+			animateView($(this), del);
+		});
     </script>
 @endsection
 
