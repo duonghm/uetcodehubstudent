@@ -1,7 +1,11 @@
 @extends('layouts.app')
 
 @section('extendedHead')
-
+	<style>
+		.animate {
+			opacity:0;
+		}
+	</style>
 @endsection
 
 @section('pageScript')
@@ -21,7 +25,7 @@
             toastr.success("Gnome & Growl type non-blocking notifications", "Toastr Notifications");
         });
 
-		showAnimation(".animate", "fadeInRight");
+		showAnimation(".animate", "fadeInUp");
 		
 		function animateView(element, delay, animClass) {
 			setTimeout(function() {
@@ -54,6 +58,8 @@
 		} else {
 			$greating = "Goog night";
 		} 
+		
+	if(!Auth::guest()) $unsubmitted = $statistic->getNumOfUnsubmit();
 		?>
 	{{$greating}}@if(!Auth::guest()), {{Auth::user()->getFullname()}}@endif!
 @endsection
@@ -62,6 +68,7 @@
         <div class="row">
     @if(!Auth::guest())
 
+		<a href="{{url('/all-courses')}}">
             <div class="animate col-lg-4 col-md-4 col-sm-6 col-xs-12">
                 <div class="dashboard-stat blue" id="anim1">
                     <div class="visual">
@@ -73,11 +80,12 @@
                         </div>
                         <div class="desc"> Total courses</div>
                     </div>
-                    <a class="more" href="javascript:;"> View more
+                    <a class="more" href="{{url('/all-courses')}}"> View more
                         <i class="m-icon-swapright m-icon-white"></i>
-                    </a>
                 </div>
             </div>
+		</a>
+		<a href="{{url('/user')}}">
             <div class="animate col-lg-4 col-md-4 col-sm-6 col-xs-12">
                 <div class="dashboard-stat red" id="anim2">
                     <div class="visual">
@@ -90,11 +98,13 @@
                         </div>
                         <div class="desc"> Total Submissions</div>
                     </div>
-                    <a class="more" href="javascript:;"> View more
+                    <a class="more" href="{{url('/user')}}"> View more
                         <i class="m-icon-swapright m-icon-white"></i>
                     </a>
                 </div>
             </div>
+		</a>
+		<a href="{{url('/user')}}">
             <div class="animate col-lg-4 col-md-4 col-sm-6 col-xs-12">
                 <div class="dashboard-stat green" id="anim3">
                     <div class="visual">
@@ -106,15 +116,17 @@
                         </div>
                         <div class="desc"> Total Score</div>
                     </div>
-                    <a class="more" href="javascript:;"> View more
+                    <a class="more" href=""> View more
                         <i class="m-icon-swapright m-icon-white"></i>
                     </a>
                 </div>
             </div>
+		</a>
+		<a href="javascript:;">
             <div class="animate col-lg-4 col-md-4 col-sm-6 col-xs-12">
                 <div class="dashboard-stat purple" id="anim4">
                     <div class="visual">
-                        <i class="fa fa-globe"></i>
+                        <i class="fa fa-users"></i>
                     </div>
                     <div class="details">
                         <div class="number">
@@ -128,31 +140,44 @@
                     </a>
                 </div>
             </div>
+		</a>
+		<a href="{{url('/my-courses')}}">
 			<div class="animate col-lg-4 col-md-4 col-sm-6 col-xs-12">
                 <div class="dashboard-stat green-haze" id="anim5">
                     <div class="visual">
-                        <i class="fa fa-globe"></i>
+                        <i class="fa fa-flag-checkered"></i>
                     </div>
+					@if($unsubmitted < 1)
                     <div class="details">
                         <div class="number">
-
-                            <span data-counter="counterup" data-value="{{$statistic->getNumOfUnsubmit()}}">0</span>
+                            <span>Bravo!</span>
+                        </div>
+                        <div class="desc"> No unsubmitted problem</div>
+                    </div>
+                    <a class="more" href="{{url('/my-courses')}}"> Review now
+                        <i class="m-icon-swapright m-icon-white"></i>
+                    </a>
+					@else
+					<div class="details">
+                        <div class="number">
+                            <span data-counter="counterup" data-value="{{$unsubmitted}}">0</span>
                         </div>
                         <div class="desc"> Unsubmitted Problems</div>
                     </div>
-                    <a class="more" href="javascript:;"> TRY ME NOW!
+                    <a class="more" href="{{url('/my-courses')}}"> Try it now!
                         <i class="m-icon-swapright m-icon-white"></i>
                     </a>
+					@endif
                 </div>
             </div>
+		</a>
 			<!--div class="animate col-lg-4 col-md-4 col-sm-6 col-xs-12">
                 <div class="dashboard-stat yellow-casablanca" id="anim6">
                     <div class="visual">
-                        <i class="fa fa-globe"></i>
+                        <i class="fa fa-pencil-square"></i>
                     </div>
                     <div class="details">
                         <div class="number">
-
                             <span data-counter="counterup" data-value="1">0</span>
                         </div>
                         <div class="desc"> New exam</div>
@@ -162,7 +187,7 @@
                     </a>
                 </div>
             </div-->
-    @else
+@else
             <div class="animate col-lg-4 col-md-4 col-sm-6 col-xs-12 margin-bottom-10">
                 <div class="dashboard-stat blue" id="anim1">
                     <div class="visual">
@@ -172,7 +197,7 @@
                         <div class="number"> {{$statistic->getNumberOfExercise()}}</div>
                         <div class="desc"> Total Exercises</div>
                     </div>
-                    <a class="more" href="javascript:;"> View more
+                    <a class="more" href="javascript:;">
                         <i class="m-icon-swapright m-icon-white"></i>
                     </a>
                 </div>
@@ -186,7 +211,7 @@
                         <div class="number"> {{$statistic->getNumberOfMember()}}</div>
                         <div class="desc"> Total Members</div>
                     </div>
-                    <a class="more" href="javascript:;"> View more
+                    <a class="more" href="javascript:;">
                         <i class="m-icon-swapright m-icon-white"></i>
                     </a>
                 </div>
@@ -200,7 +225,7 @@
                         <div class="number"> {{$statistic->getNumberOfCourse()}}</div>
                         <div class="desc"> Total Courses</div>
                     </div>
-                    <a class="more" href="javascript:;"> View more
+                    <a class="more" href="javascript:;">
                         <i class="m-icon-swapright m-icon-white"></i>
                     </a>
                 </div>
@@ -213,67 +238,48 @@
                 <div class="portlet light ">
                     <div class="portlet-title">
                         <div class="caption">
-                            <i class="icon-share font-blue"></i>
+                            <i class="icon-user font-blue"></i>
                             <span class="caption-subject font-blue bold uppercase">LOGIN NOW</span>
                         </div>
                     </div>
                     <div class="portlet-body">
-	<form class="login-form" role="form" method="POST" action="{{ url('/login') }}">
-        {!! csrf_field() !!}
-        <div class="alert alert-danger display-hide">
-            <button class="close" data-close="alert"></button>
-            <span> Enter any username and password. </span>
-        </div>
-
-        @if ($errors->has('username'))
-        <div class="alert alert-danger">
-            <span><strong>{{ $errors->first('username') }}</strong></span>
-        </div>
-        @endif
-        @if ($errors->has('password'))
-        <div class="alert alert-danger">
-            <span class="help-block">
-                <strong>{{ $errors->first('password') }}</strong>
-            </span>
-        </div>
-        @endif
-
-        <div class="form-group">
-            <!--ie8, ie9 does not support html5 placeholder, so we just show field title for that-->
-            <label class="control-label visible-ie8 visible-ie9">Username</label>
-            <input class="form-control form-control-solid placeholder-no-fix" type="text" autocomplete="off"
-                   placeholder="Username" name="username"/></div>
-        <div class="form-group">
-            <label class="control-label visible-ie8 visible-ie9">Password</label>
-            <input class="form-control form-control-solid placeholder-no-fix" type="password" autocomplete="off"
-                   placeholder="Password" name="password"/>
-        </div>
-		<input type="checkbox" name="remember" value="1"/>Remember </label><br/><br/>
-        <div class="form-actions">
-            <center><button type="submit" class="btn green uppercase" style="width:100%"
-				data-toggle="modal" data-target="#enroll-modal">Login</button></center>
-            <label class="rememberme check">
-        </div>
-        <div class="modal fade" id="enroll-modal" role="dialog">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close"
-                                data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Please wait...</h4>
-                    </div>
-                    <div class="modal-body">
-                        <p>Please wait...</p>
-                    </div>
-                    <div class="modal-footer">
-                        <div class="form-group">
-							
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </form>
+						<form class="login-form" role="form" method="POST" action="{{ url('/login') }}">
+							{!! csrf_field() !!}
+							<div class="alert alert-danger display-hide">
+								<button class="close" data-close="alert"></button>
+								<span> Enter any username and password. </span>
+							</div>
+						
+							@if ($errors->has('username'))
+							<div class="alert alert-danger">
+								<span><strong>{{ $errors->first('username') }}</strong></span>
+							</div>
+							@endif
+							@if ($errors->has('password'))
+							<div class="alert alert-danger">
+								<span class="help-block">
+									<strong>{{ $errors->first('password') }}</strong>
+								</span>
+							</div>
+							@endif
+						
+							<div class="form-group">
+								<!--ie8, ie9 does not support html5 placeholder, so we just show field title for that-->
+								<label class="control-label visible-ie8 visible-ie9">Username</label>
+								<input class="form-control form-control-solid placeholder-no-fix" type="text" autocomplete="off"
+									placeholder="Username" name="username"/></div>
+							<div class="form-group">
+								<label class="control-label visible-ie8 visible-ie9">Password</label>
+								<input class="form-control form-control-solid placeholder-no-fix" type="password" autocomplete="off"
+									placeholder="Password" name="password"/>
+							</div>
+							<input type="checkbox" name="remember" value="1"/>Remember </label><br/><br/>
+							<div class="form-actions">
+								<center><button type="submit" class="btn green uppercase" style="width:100%"
+									data-toggle="modal" data-target="#enroll-modal">Login</button></center>
+								<label class="rememberme check">
+							</div>
+						</form>
 
                     </div>
                 </div>
@@ -282,7 +288,7 @@
                 <div class="portlet light ">
                     <div class="portlet-title">
                         <div class="caption">
-                            <i class="icon-share font-blue"></i>
+                            <i class="fa-area-chart font-blue"></i>
                             <span class="caption-subject font-blue bold uppercase">Course Info.</span>
                         </div>
                     </div>
