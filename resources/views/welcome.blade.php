@@ -20,20 +20,24 @@
         $('#btn').click(function () {
             toastr.success("Gnome & Growl type non-blocking notifications", "Toastr Notifications");
         });
+
+		showAnimation(".animate", "fadeInUp");
 		
-		function animateView(element, delay) {
+		function animateView(element, delay, animClass) {
 			setTimeout(function() {
-				element.addClass('fadeInUp animated');
+				element.addClass(animClass+' animated');
+				element.css({"opacity": "1"});
 			}, delay);
 		}
 		
-		//Fade in animation
-		var del = 0;
-		$(".animate").each( function() {
-			del += 100;
-			$(this).css({"opacity": "0"});
-			animateView($(this), del);
-		});
+		function showAnimation(elemClass, animClass) {
+			var del = 0;
+			$(elemClass).each( function() {
+				del += 100;
+				$(this).css({"opacity": "0"});
+				animateView($(this), del, animClass);
+			});
+		}
     </script>
 @endsection
 
