@@ -204,14 +204,13 @@
                                                             <a href="javascript:;"
                                                                class="primary-link">{{$rank->rank}}</a>
                                                         </td>
-                                                        <td> {{$rank->username}}</td>
+                                                        <td>{{$rank->username}} <br/>{{$rank->firstname}} {{$rank->lastname}}</td>
                                                         <td>
                                                             @if($rank->totalScore != -1)
                                                                 {{$rank->totalScore}}
                                                             @else
                                                                 #
                                                             @endif
-
                                                         </td>
                                                     </tr>
                                                 @endforeach
