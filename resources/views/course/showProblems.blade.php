@@ -20,25 +20,25 @@
 @foreach($problems as $index=>$p)
 	@php
 		$startIndex = ($problems->currentPage()-1) * $problems->perPage();
-		$problemScore = $p->getScoreOfUser($course->courseId);
+		$problemscore = $p->getScoreOfUser($course->courseId);
 	@endphp
 	<div class="portlet light">
 		<div class="portlet-body">
 			<div class="row">
 				<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 col-xs-12">
-					<b><a href="{{url(Request::path().'/'.$p->problemId)}}">Exer. {{$startIndex + $index + 1}} | {{$p->problemCode}}</a></b><br/>
+					<b><a href="{{url(Request::path().'/'.$p->problemId)}}">Exer. {{$problems->total() - $startIndex - $index}} | {{$p->problemCode}}</a></b><br/>
 					{{--<td width="300px">{{$p->tagValues}}</td>--}}
 					{{--<td>{{$p->pivot->hardLevel}}</td>--}}
 					Submitted: {{$p->numberOfSubmitedUser2()}} users<br/> 
 					Finished: {{$p->numberOfFinishedUser2()}} users<br/>
 					<button type="button"
 						onclick="document.location = '{{url(Request::path().'/'.$p->problemId)}}';"
-					@if($problemScore == null)
+					@if($problemscore == null)
 						class="btn btn-primary" > <b>SOLVE THIS PROBLEM</b> </button>
-					@elseif($problemScore == $p->defaultScore)
-						class="btn btn-success" > <i class="fa fa-check"></i> <b>REVIEW</b> ({{$problemScore}})</button>
+					@elseif($problemscore == $p->defaultScore)
+						class="btn btn-success" > <i class="fa fa-check"></i> <b>REVIEW</b> ({{$problemscore}})</button>
 					@else
-						class="btn btn-warning" style="color: #000;"> <b>TRY AGAIN</b> ({{$problemScore}}) </button>
+						class="btn btn-warning" style="color: #000;"> <b>TRY AGAIN</b> ({{$problemscore}}) </button>
 					@endif
 				</div>
 				<div class="col-lg-8 col-md-8 col-sm-8 hidden-xs hidden-xxs">

@@ -55,7 +55,7 @@ class CourseController extends Controller
     public function showProblems($courseId)
     {
         $course = Auth::user()->courses->find($courseId);
-        $problems = $course->problems()->paginate(10);
+        $problems = $course->problems()->orderBy('problemId', 'desc')->paginate(10);
 //        $problems = Problem::paginate(10);
         return view('course.showProblems', compact('problems','course'));
     }
