@@ -18,31 +18,28 @@
 	<br/>
 @if(sizeof($problems) > 0)
 @foreach($problems as $index=>$p)
+	@php
+		$startIndex = ($problems->currentPage()-1) * $problems->perPage();
+		$problemScore = $p->getScoreOfUser($course->courseId);
+	@endphp
 	<div class="portlet light">
 		<div class="portlet-body">
 			<div class="row">
 				<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 col-xs-12">
-					<div class="table-scrollable table-scrollable-borderless">
-						@php
-							$startIndex = ($problems->currentPage()-1) * $problems->perPage();
-							$problemScore = $p->getScoreOfUser($course->courseId);
-						@endphp
-						<b><a href="{{url(Request::path().'/'.$p->problemId)}}">Exer. {{$startIndex + $index + 1}} | {{$p->tagValues}}DUONG_P6_0043</a></b><br/>
-						{{--<td width="300px">{{$p->tagValues}}</td>--}}
-						{{--<td>{{$p->pivot->hardLevel}}</td>--}}
-						Submitted: {{$p->numberOfSubmitedUser2()}} users<br/> 
-						Finished: {{$p->numberOfFinishedUser2()}} users<br/>
-						<br/>
-						<button type="button"
-							onclick="document.location = '{{url(Request::path().'/'.$p->problemId)}}';"
-						@if($problemScore == null)
-							class="btn btn-primary" > SOLVE THIS PROBLEM </button>
-						@elseif($problemScore == $p->defaultScore)
-							class="btn btn-success" > <i class="fa fa-check"></i> REVIEW </button>
-						@else
-							class="btn btn-primary" > TRY AGAIN ({{$problemScore}}) </button>
-						@endif
-					</div>
+					<b><a href="{{url(Request::path().'/'.$p->problemId)}}">Exer. {{$startIndex + $index + 1}} | {{$p->problemCode}}</a></b><br/>
+					{{--<td width="300px">{{$p->tagValues}}</td>--}}
+					{{--<td>{{$p->pivot->hardLevel}}</td>--}}
+					Submitted: {{$p->numberOfSubmitedUser2()}} users<br/> 
+					Finished: {{$p->numberOfFinishedUser2()}} users<br/>
+					<button type="button"
+						onclick="document.location = '{{url(Request::path().'/'.$p->problemId)}}';"
+					@if($problemScore == null)
+						class="btn btn-primary" > <b>SOLVE THIS PROBLEM</b> </button>
+					@elseif($problemScore == $p->defaultScore)
+						class="btn btn-success" > <i class="fa fa-check"></i> <b>REVIEW</b> ({{$problemScore}})</button>
+					@else
+						class="btn btn-warning" style="color: #000;"> <b>TRY AGAIN</b> ({{$problemScore}}) </button>
+					@endif
 				</div>
 				<div class="col-lg-8 col-md-8 col-sm-8 hidden-xs hidden-xxs">
 						@php
