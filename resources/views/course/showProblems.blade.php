@@ -52,13 +52,13 @@
 		<div class="portlet-body">
 			<div class="row">
 				<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 col-xs-12">
-					<b><a href="{{url(Request::path().'/'.$p->problemId)}}">Exer. {{$problems->total() - $startIndex - $index}} | {{$p->problemCode}}</a></b><br/>
+					<b><a href="{{url(Request::path().'/'.$p->problemId)}}?page={{$problems->currentPage()}}">Exer. {{$problems->total() - $startIndex - $index}} | {{$p->problemCode}}</a></b><br/>
 					{{--<td width="300px">{{$p->tagValues}}</td>--}}
 					{{--<td>{{$p->pivot->hardLevel}}</td>--}}
 					Submitted: {{$p->numberOfSubmitedUser2()}} users<br/> 
 					Finished: {{$p->numberOfFinishedUser2()}} users<br/>
 					<button type="button"
-						onclick="document.location = '{{url(Request::path().'/'.$p->problemId)}}';"
+						onclick="document.location = '{{url(Request::path().'/'.$p->problemId)}}?page={{$problems->currentPage()}}';"
 					@if($problemscore == null)
 						class="btn btn-primary" > <b>SOLVE THIS PROBLEM</b> </button>
 					@elseif($problemscore == $p->defaultScore)

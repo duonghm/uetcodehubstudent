@@ -43,6 +43,26 @@
                     editor.getSession().setMode("ace/mode/c_cpp");
             }
         });
+		
+		var prevPage = getParameterByName("page");
+		console.log(prevPage);
+		$('#backbtn').click(function(){
+			if (prevPage == null) {
+				document.location = "{{ URL('/my-courses/'.$courseId.'/problems') }}";
+			} else {
+				document.location =	"{{ URL('/my-courses/'.$courseId.'/problems') }}?page="+prevPage;
+			}
+		});
+		
+		function getParameterByName(name) {
+			url = window.location.href;
+			name = name.replace(/[\[\]]/g, "\\$&");
+			var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+				results = regex.exec(url);
+			if (!results) return null;
+			if (!results[2]) return '';
+			return decodeURIComponent(results[2].replace(/\+/g, " "));
+		}
     </script>
     <?php
         $templateCode = $problem->templateCode;
@@ -257,9 +277,10 @@
                 <div class="portlet-title">
 
                     <div class="caption">
-                        <i class=" icon-layers font-green"></i>
-                        <span class="caption-subject font-green bold uppercase">
-                            Mô tả bài toán
+						<button type="button" id="backbtn" class="btn btn-primary"><i class="fa fa-arrow-left"></i> BACK </button>
+						&nbsp&nbsp
+                        <span class="caption-subject font-blue bold uppercase">
+                            {{$problem->problemCode}}
                         </span>
                     </div>
                 </div>
@@ -278,9 +299,6 @@
                             <div style="background: #E0E0E0; margin-top: 10px; font-weight: bold">Output Description
                             </div>
                             <div>{!! $problem->outputDescription !!}</div>
-                        </div>
-                        <div class="btn" style="position: absolute; bottom: 20px; text-align: right; width: 80%;">
-                            <a href="{{ URL('/my-courses/'.$courseId.'/problems') }}"> Back </a>
                         </div>
                     </div>
                 </div>
