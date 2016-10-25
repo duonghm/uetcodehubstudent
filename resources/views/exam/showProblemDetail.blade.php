@@ -54,6 +54,38 @@
 
 
     ?>
+	<script>
+		var remainingTime = {{$remainTime}};
+		var countDownElem = document.getElementById('countDownTimer');
+		var minutes, seconds;
+		
+		function timeTick() {
+			minutes = Math.floor(remainingTime/60);
+			seconds = remainingTime%60;
+			if (remainingTime > 300) {
+				countDownElem.style.color = 'cornflowerblue';
+			} else if (remainingTime > 0) {
+				countDownElem.style.color = '#df8505';
+			} else {
+				countDownElem.style.color = '#e7505a';
+			}
+			
+			if (minutes > 0)
+				countDownElem.innerHTML = "Remaining time: " + minutes + "m " + seconds + "s";
+			else if (minutes == 0)
+				countDownElem.innerHTML = "Remaining time: " + seconds + "s";
+			else {
+				countDownElem.innerHTML = "TIME IS UP";
+				if (remainingTime > -2)
+					toastr.success("Congratulation!", "You've finished your test.");
+				clearInterval(mTimer);
+			}
+			remainingTime--;
+		}
+		
+		var mTimer = setInterval(timeTick, 1000);
+	</script>
+	
     <script>
         String.prototype.replaceAll = function(search, replacement) {
             var target = this;
@@ -158,18 +190,12 @@
             $('#mytabs').tabs();
             $('#result').load('{{url(Request::path().'/submissionTable')}}');
 
-
-
             $(function () {
-                function reloadTime() {
-                    $('#remain-time').load('{{url(Request::path().'/countDown')}}')
-                }
                 function callAjax() {
                     console.log('{{url(Request::path().'/submissionTable')}}');
                     $('#result').load('{{url(Request::path().'/submissionTable')}}')
                 }
                 setInterval(callAjax, 5000);
-                setInterval(reloadTime,1000);
             });
 
             $('#frmSubmit').submit(function () {
@@ -277,7 +303,7 @@
             <div class="portlet light portlet-fit full-height-content full-height-content-scrollable ">
                 <div class="portlet-body">
                     <div style="float: right;font-family: inherit;font-weight: bold; color: cornflowerblue;">
-                        <span id="remain-time"></span>
+                        <span id="countDownTimer">Loading timer...</span>
                     </div>
                     <div class="box">
                         <div id="mytabs" role="tabpanel">

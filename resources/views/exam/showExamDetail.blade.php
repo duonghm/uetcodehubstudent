@@ -1,21 +1,37 @@
 @extends('layouts.app')
 
 @section('script')
-
-    <script type="text/javascript">
-        $(document).ready(function () {
-
-            $(function () {
-                //var i = 1000;
-
-                function reloadTime() {
-                    $('#remain-time').load('{{url(Request::path().'/countDown')}}')
-                }
-
-                setInterval(reloadTime, 1000);
-            });
-        });
-    </script>
+	<script>
+		var remainingTime = {{$remainTime}};
+		var countDownElem = document.getElementById('countDownTimer');
+		var minutes, seconds;
+		
+		function timeTick() {
+			minutes = Math.floor(remainingTime/60);
+			seconds = remainingTime%60;
+			if (remainingTime > 300) {
+				countDownElem.style.color = 'cornflowerblue';
+			} else if (remainingTime > 0) {
+				countDownElem.style.color = '#df8505';
+			} else {
+				countDownElem.style.color = '#e7505a';
+			}
+			
+			if (minutes > 0)
+				countDownElem.innerHTML = "Remaining time: " + minutes + "m " + seconds + "s";
+			else if (minutes == 0)
+				countDownElem.innerHTML = "Remaining time: " + seconds + "s";
+			else {
+				countDownElem.innerHTML = "TIME IS UP";
+				if (remainingTime > -2)
+					toastr.success("Congratulation!", "You've finished your test.");
+				clearInterval(mTimer);
+			}
+			remainingTime--;
+		}
+		
+		var mTimer = setInterval(timeTick, 1000);
+	</script>
 @endsection
 
 @section('content')
@@ -26,7 +42,7 @@
                 <span class="caption-subject font-green bold uppercase">{{$exam->examName}}: </span>
                 <span class="caption-subject bold" style="color:#00232c;"> {{$exam->score(Auth::user()->userId). '/' . $exam->maxScore()}}</span>
                 <div class="caption-subject" style="float: right; width: 60%; font-family: inherit;font-weight: bold; color: cornflowerblue;">
-                    <span style="float: right" id="remain-time"></span>
+                    <span id="countDownTimer">Loading timer...</span>
                 </div>
             </div>
         </div>

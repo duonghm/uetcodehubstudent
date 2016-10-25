@@ -37,12 +37,14 @@ class ExamController extends Controller
             $user->exams()->attach($examId);
         }
         
-        $q = strtotime($exam->joinTime(Auth::user()->userId));
         //$now = strtotime ((new \DateTime('now', new \DateTimeZone('Asia/Ho_Chi_Minh')))->format('Y-m-d H:i:s'));
-        //$remain = $now - $q;
+		$now = strtotime ((new \DateTime('now'))->format('Y-m-d H:i:s'));
+        $joinTime = strtotime($exam->joinTime(Auth::user()->userId));
+        $time = $now - $joinTime;
+        $remainTime = $exam->duration * 60 - $time;
         
         $problems = $exam->problems;
-        return view('exam.showExamDetail', compact('exam', 'problems', 'q'));
+        return view('exam.showExamDetail', compact('exam', 'problems', 'remainTime'));
     }
 
 
@@ -50,7 +52,15 @@ class ExamController extends Controller
     {
         $exam = Exam::find($examId);
         $problems = $exam->problems;
-        return view('exam.showExamDetail', compact('examId', 'problems'));
+		
+		//calculate time
+		//$now = strtotime ((new \DateTime('now', new \DateTimeZone('Asia/Ho_Chi_Minh')))->format('Y-m-d H:i:s'));
+		$now = strtotime ((new \DateTime('now'))->format('Y-m-d H:i:s'));
+        $joinTime = strtotime($exam->joinTime(Auth::user()->userId));
+        $time = $now - $joinTime;
+        $remainTime = $exam->duration * 60 - $time;
+		
+        return view('exam.showExamDetail', compact('examId', 'problems', 'remainTime'));
     }
 
     public function showProblemDetail($examId, $problemId)
@@ -59,10 +69,18 @@ class ExamController extends Controller
         $problems = $exam->problems;
         $problem = $problems->find($problemId);
         $submissions = $problem->submissions;
-        return view('exam.showProblemDetail', compact('examId', 'problem', 'submissions'));
+		
+		//calculate time
+		//$now = strtotime ((new \DateTime('now', new \DateTimeZone('Asia/Ho_Chi_Minh')))->format('Y-m-d H:i:s'));
+		$now = strtotime ((new \DateTime('now'))->format('Y-m-d H:i:s'));
+        $joinTime = strtotime($exam->joinTime(Auth::user()->userId));
+        $time = $now - $joinTime;
+        $remainTime = $exam->duration * 60 - $time;
+		
+        return view('exam.showProblemDetail', compact('examId', 'problem', 'submissions', 'remainTime'));
     }
 
-    public function countDown($examId){
+    /*public function countDown($examId){
         $exam = Exam::find($examId);
 //        $now = strtotime ((new \DateTime('now', new \DateTimeZone('Asia/Ho_Chi_Minh')))->format('Y-m-d H:i:s'));
         $now = strtotime ((new \DateTime('now'))->format('Y-m-d H:i:s'));
@@ -71,5 +89,5 @@ class ExamController extends Controller
         $remainTime = $exam->duration * 60 - $time;
 
         return view('exam.timeCountdown',compact('remainTime'));
-    }
+    }*/
 }
