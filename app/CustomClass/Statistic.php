@@ -90,13 +90,13 @@ namespace App\CustomClass{
                     'SELECT tab11.problemId, problemCode, courseId, numOfUser, numOfFinishedUser, tab11.ratio FROM
 						(SELECT tab1.problemId, tab1.problemCode, tab1.numOfUser, tab2.numOfFinishedUser, COALESCE((tab2.numOfFinishedUser/tab1.numOfUser),-1) as ratio
 						FROM (select problemId, problemCode, count(userId) as numOfUser from(
-											select problems.problemId, problems.problemCode, submissions.userId, max(submissions.resultScore) as userScore, submissions.courseId, problems.defaultScore
+											select problems.problemId, problems.problemCode, submissions.userId
 											from problems left join submissions on problems.problemId = submissions.problemId
 											group by problems.problemId, submissions.userId) as s
 										group by problemId) as tab1
 						LEFT OUTER JOIN (select problems.problemId as problemId, count(s.userId)
 											as numOfFinishedUser from(
-											select problems.problemId, submissions.userId, max(submissions.resultScore) as userScore, submissions.courseId, problems.defaultScore
+											select problems.problemId, submissions.userId, max(submissions.resultScore) as userScore, problems.defaultScore
 											from problems left join submissions on problems.problemId = submissions.problemId
 											group by problems.problemId, submissions.userId having userScore = defaultScore) as s
 											right join problems on s.problemId = problems.problemId
