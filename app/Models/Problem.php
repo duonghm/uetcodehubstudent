@@ -29,37 +29,32 @@ class Problem extends Model
         return $this->belongsToMany('App\Models\Exam', 'examProblem')->withPivot('scoreInExam', 'isActive');
     }
 
-    public function numberOfSubmitedUser(){
+    public function numberOfSubmitedUser2(){
         $row = DB::select(
             DB::raw(
-             'select problemId, count(userId) as numOfUser from(
-                select problems.problemId, submissions.userId, max(submissions.resultScore) as userScore, submissions.courseId, problems.defaultScore
-                from problems left join submissions on problems.problemId = submissions.problemId
-                group by problems.problemId, submissions.userId) as s
-              group by problemId having problemId = '.$this->problemId)
+                'SELECT problemId, submittedUser AS numOfUser 
+				FROM problemsolvingresult
+				WHERE problemId = '.$this->problemId)
         );
         return $row[0]->numOfUser;
     }
 
-    public function numberOfSubmitedUser2(){
+    /*public function numberOfSubmitedUser2(){
         $p = Submission::where('problemId',$this->problemId)->groupBy('userId')->get([DB::raw('userId')]);
         return sizeof($p);
-    }
+    }*/
 
-    public function numberOfFinishedUser(){
+    public function numberOfFinishedUser2(){
         $row = DB::select(
             DB::raw(
-                'select problems.problemId, count(s.userId) as numOfUser from(
-                  select problems.problemId, submissions.userId, max(submissions.resultScore) as userScore, submissions.courseId, problems.defaultScore
-                  from problems left join submissions on problems.problemId = submissions.problemId
-                  group by problems.problemId, submissions.userId having userScore = defaultScore) as s 
-                  right join problems on s.problemId = problems.problemId
-                group by problems.problemId having problemId = '.$this->problemId)
+                'SELECT problemId, finishedUser AS numOfUser 
+				FROM problemsolvingresult
+				WHERE problemId = '.$this->problemId)
         );
         return $row[0]->numOfUser;
     }
 
-    public function numberOfFinishedUser2(){
+    /*public function numberOfFinishedUser2(){
         $submissions = Submission::where('problemId',$this->problemId)->groupBy('userId')->get(['userId', DB::raw('max(resultScore) as score')]);
         $count = 0;
         foreach ($submissions as $s){
@@ -68,7 +63,7 @@ class Problem extends Model
             }
         }
         return $count;
-    }
+    }*/
 
     public function getScoreOfUser($courseId){
         $row = DB::select(
