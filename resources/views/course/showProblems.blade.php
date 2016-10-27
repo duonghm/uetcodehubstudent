@@ -47,7 +47,7 @@
 	@php
 		$startIndex = ($problems->currentPage()-1) * $problems->perPage();
 		$problemscore = $p->getScoreOfUser($course->courseId);
-		$problemsolveresult = $p->getProblemSolvingResult();
+		$problemsolveresult = $p->getProblemSolvingResult($course->courseId);
 		if (sizeof($problemsolveresult) == 0) {
 			$submitted = 'Updating';
 			$finished = 'Updating';
@@ -78,8 +78,11 @@
 				<div class="col-lg-8 col-md-8 col-sm-8 hidden-xs hidden-xxs">
 						@php
 							$summary = strip_tags($p->content);
+							$summary = str_replace(array("\r\n", "\n", "\r"), ' ', $summary);
 						@endphp
-						{!! substr($summary, 0, 400) !!}
+						<script>
+							document.write(decodeURI("{{ $summary }}").substr(0,400));
+						</script>
 						@if(strlen($summary) >= 400)
 							...
 						@endif

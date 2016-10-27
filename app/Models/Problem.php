@@ -54,12 +54,12 @@ class Problem extends Model
         return $row[0]->numOfUser;
     }
 	
-	public function getProblemSolvingResult() {
+	public function getProblemSolvingResult($courseId) {
 		$row = DB::select(
             DB::raw(
-                'SELECT problemId, submittedUser, finishedUser 
+                'SELECT problemId, courseId, submittedUser, finishedUser 
 				FROM problemsolvingresult
-				WHERE problemId = '.$this->problemId)
+				WHERE problemId='.$this->problemId.' AND courseId='.$courseId)
         );
 		return $row;
 	}
