@@ -47,6 +47,14 @@
 	@php
 		$startIndex = ($problems->currentPage()-1) * $problems->perPage();
 		$problemscore = $p->getScoreOfUser($course->courseId);
+		$problemsolveresult = $p->getProblemSolvingResult();
+		if (sizeof($problemsolveresult) == 0) {
+			$submitted = 'Updating';
+			$finished = 'Updating';
+		} else {
+			$submitted = $problemsolveresult[0]->submittedUser.' users';
+			$finished = $problemsolveresult[0]->finishedUser.' users';
+		}
 	@endphp
 	<div class="animate portlet light">
 		<div class="portlet-body">
@@ -55,8 +63,8 @@
 					<b><a href="{{url(Request::path().'/'.$p->problemId)}}?page={{$problems->currentPage()}}">Exer. {{$problems->total() - $startIndex - $index}} | {{$p->problemCode}}</a></b><br/>
 					{{--<td width="300px">{{$p->tagValues}}</td>--}}
 					{{--<td>{{$p->pivot->hardLevel}}</td>--}}
-					Submitted: {{$p->numberOfSubmitedUser2()}} users<br/> 
-					Finished: {{$p->numberOfFinishedUser2()}} users<br/>
+					Submitted: {{$submitted}}<br/> 
+					Finished: {{$finished}}<br/>
 					<button type="button"
 						onclick="document.location = '{{url(Request::path().'/'.$p->problemId)}}?page={{$problems->currentPage()}}';"
 					@if($problemscore == null)

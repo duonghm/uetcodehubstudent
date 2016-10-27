@@ -53,6 +53,16 @@ class Problem extends Model
         );
         return $row[0]->numOfUser;
     }
+	
+	public function getProblemSolvingResult() {
+		$row = DB::select(
+            DB::raw(
+                'SELECT problemId, submittedUser, finishedUser 
+				FROM problemsolvingresult
+				WHERE problemId = '.$this->problemId)
+        );
+		return $row;
+	}
 
     /*public function numberOfFinishedUser2(){
         $submissions = Submission::where('problemId',$this->problemId)->groupBy('userId')->get(['userId', DB::raw('max(resultScore) as score')]);
