@@ -122,7 +122,7 @@
                 </div>
             </div>
 		</a>
-		<a href="javascript:;">
+		<a href="{{url('/user')}}">
             <div class="animate col-lg-4 col-md-4 col-sm-6 col-xs-12">
                 <div class="dashboard-stat purple" id="anim4">
                     <div class="visual">
@@ -131,11 +131,12 @@
                     <div class="details">
                         <div class="number">
 
-                            <span>In Maintain</span>
+                            <span data-counter="counterup" 
+								data-value="{{Auth::user()->currentRanking()}}">0</span>
                         </div>
                         <div class="desc"> Ranking</div>
                     </div>
-                    <a class="more" href="javascript:;"> View more
+                    <a class="more" href="{{url('/user')}}"> View more
                         <i class="m-icon-swapright m-icon-white"></i>
                     </a>
                 </div>

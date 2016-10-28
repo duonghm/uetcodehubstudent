@@ -100,7 +100,7 @@ class User extends Authenticatable
 				FROM users AS tab1
 				RIGHT JOIN rankingtable AS tab2
 				ON tab1.userId = tab2.userId
-				WHERE tab1.userId='.$this->userId
+				WHERE tab2.userId='.$this->userId
             )
         );
 		if (sizeof($currentRank)<1) {
