@@ -57,28 +57,25 @@ namespace App\CustomClass{
 		public function getHardestTable(){
             return DB::select(
                 DB::raw(
-                    'SELECT tab11.problemId, problemCode, courseId, numOfUser, numOfFinishedUser, tab11.ratio FROM
-						(SELECT tab1.problemId, tab1.problemCode, tab1.numOfUser, tab2.numOfFinishedUser, COALESCE((tab2.numOfFinishedUser/tab1.numOfUser),-1) as ratio
-						FROM (select problemId, problemCode, count(userId) as numOfUser from(
-											select problems.problemId, problems.problemCode, submissions.userId
-											from problems left join submissions on problems.problemId = submissions.problemId
-											group by problems.problemId, submissions.userId) as s
-										group by problemId) as tab1
-						LEFT OUTER JOIN (select problems.problemId as problemId, count(s.userId)
-											as numOfFinishedUser from(
-											select problems.problemId, submissions.userId, max(submissions.resultScore) as userScore, problems.defaultScore
-											from problems left join submissions on problems.problemId = submissions.problemId
-											group by problems.problemId, submissions.userId having userScore = defaultScore) as s
-											right join problems on s.problemId = problems.problemId
-											group by problems.problemId) as tab2
-						ON tab1.problemId=tab2.problemId
-						WHERE tab1.numOfUser > 40) as tab11
-					LEFT JOIN (SELECT problemId, courseId, isActive
-						FROM courseproblems
-						WHERE isActive=1) AS tab12
-					ON tab11.problemId=tab12.problemId
-					WHERE tab11.ratio > 0 AND courseId IS NOT NULL
-					ORDER BY ratio'
+                    'SELECT problemId, problemCode, tab1.courseId, ratio,
+					submittedUser AS numOfUser, finishedUser AS numOfFinishedUser FROM
+						courses AS tab1
+					RIGHT JOIN 
+						(SELECT problems.problemId, tab1.courseId, finishedUser, submittedUser,
+							COALESCE(finishedUser/submittedUser, -1) AS ratio, problemCode
+						FROM 
+							(SELECT psr.problemId, psr.courseId, finishedUser, submittedUser
+							FROM problemsolvingresult AS psr
+							LEFT JOIN examproblems
+							ON psr.problemId=examproblems.problemId
+							WHERE isActive IS NULL) AS tab1
+						LEFT JOIN problems
+						ON tab1.problemId = problems.problemId
+						WHERE submittedUser > 40) AS tab2
+					ON tab2.courseId=tab1.courseId
+					WHERE isActive=1
+					ORDER BY ratio
+					LIMIT 0,10'
                 )
             );
         }
