@@ -103,7 +103,11 @@ class User extends Authenticatable
 				WHERE tab1.userId='.$this->userId
             )
         );
-        return $currentRank[0]->rank;
+		if (sizeof($currentRank)<1) {
+			return 'Updating';
+		} else {
+			return $currentRank[0]->rank;
+		}
 
     }
 
