@@ -40,44 +40,14 @@ namespace App\CustomClass{
         public function getRankingTable(){
             return DB::select(
                 DB::raw(
-                    'select rankingTable.userId, rankingTable.username, rankingTable.firstname, rankingTable.lastname, rankingTable.totalScore, rankingTable.rank from
-                  (select userId, username, totalScore, firstname, lastname,
-                    @curRank := IF(@prevRank = totalScore, @curRank, @incRank) AS rank, 
-                    @incRank := @incRank + 1, 
-                    @prevRank := totalScore
-                  from
-                    (select b.userId as userId, b.username as username, sum(b.maxScore) as totalScore, b.firstname, b.lastname
-                    from 
-                      (select users.userId, users.username, submissions.problemId, submissions.courseId, users.firstname, users.lastname, COALESCE(max(resultScore),-1) as maxScore
-                      from submissions right join users on submissions.userId = users.userId
-                      group by users.userId, problemId, courseId, users.firstname, users.lastname) as b
-                    group by b.userId order by totalScore desc) as c,
-                    (SELECT @curRank :=0, @prevRank := NULL, @incRank := 1) as r 
-                  ) as rankingTable'
+                    'SELECT tab2.userId, tab1.username, tab1.firstname, tab1.lastname, tab2.score AS totalScore, tab2.rank
+					FROM users AS tab1
+					RIGHT JOIN rankingtable AS tab2
+					ON tab1.userId = tab2.userId
+					ORDER BY tab2.rank'
                 )
             );
         }
-
-        /*public function getRankingTable(){
-            return DB::select(
-                DB::raw(
-                    'select rankingTable.userId, rankingTable.username, rankingTable.totalScore, rankingTable.rank from
-                  (select userId, username, totalScore,
-                    @curRank := IF(@prevRank = totalScore, @curRank, @incRank) AS rank,
-                    @incRank := @incRank + 1,
-                    @prevRank := totalScore
-                  from
-                    (select b.userId as userId, b.username as username, sum(b.maxScore) as totalScore
-                    from
-                      (select users.userId, users.username, submissions.problemId, submissions.courseId, COALESCE(max(resultScore),-1) as maxScore
-                      from submissions right join users on submissions.userId = users.userId
-                      group by users.userId, problemId, courseId) as b
-                    group by b.userId order by totalScore desc) as c,
-                    (SELECT @curRank :=0, @prevRank := NULL, @incRank := 1) as r
-                  ) as rankingTable'
-                )
-            );
-        }*/
 		
 		/*
 			TODO: Update this every 12h. Use temporary table for it?
