@@ -21,7 +21,7 @@ class Course extends Model
 
     public function problems()
     {
-        return $this->belongsToMany('App\Models\Problem', 'courseproblems', 'courseId', 'problemId')->withPivot('scoreInCourse', 'hardLevel', 'isActive')->wherePivot('isActive',1);
+        return $this->belongsToMany('App\Models\Problem', 'courseproblems', 'courseId', 'problemId')->withPivot('courseProblemId', 'scoreInCourse', 'hardLevel', 'isActive')->wherePivot('isActive',1);
 //        return $this->belongsToMany('App\Models\Problem', 'courseproblems', 'courseId', 'problemId')->where('courseproblems.isActive',1);
     }
     

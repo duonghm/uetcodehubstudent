@@ -47,7 +47,7 @@
 	@php
 		$startIndex = ($problems->currentPage()-1) * $problems->perPage();
 		$problemscore = $p->getScoreOfUser($course->courseId);
-		$problemsolveresult = $p->getProblemSolvingResult($course->courseId);
+		$problemsolveresult = $p->getProblemSolvingResult($p->pivot->courseProblemId);
 		if (sizeof($problemsolveresult) == 0) {
 			$submitted = 'Updating';
 			$finished = 'Updating';
