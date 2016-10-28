@@ -11,6 +11,7 @@ use App\Http\Requests;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\DB;
 
 class CourseController extends Controller
 {
@@ -63,9 +64,19 @@ class CourseController extends Controller
     public function showProblemDetail($courseId, $problemId)
     {
         $courses = Auth::user()->courses->find($courseId);
-        $problems = $courses->problems;
-        $problem = $problems->find($problemId);
+		if (sizeof($courses) > 0) {
+			$problems = $courses->problems;
+			$problem = $problems->find($problemId);
+		} else {
+			$problem = null;
+		}
+		$row = DB::select(
+                DB::raw(
+                    'SELECT courseName, courseId FROM courses WHERE courseId='.$courseId
+                )
+            );
+		$courseName = $row[0]->courseName;
         //$submissions = Auth::user()->submissions($courseId, $problemId);
-        return view('course.showProblemDetail', compact('courseId', 'problem'));
+        return view('course.showProblemDetail', compact('courseId', 'problem', 'courseName'));
     }
 }

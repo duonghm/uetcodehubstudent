@@ -12,6 +12,7 @@
 @endsection
 
 @section('script')
+@if ($problem != null)
     <script type="text/javascript">
         $('#expand-button').click(function (e) {
             $('#editor-box').toggleClass('fullscreen');
@@ -251,8 +252,15 @@
             $('#sourceText')[0].innerText = source;
         }
     </script>
+@endif
 @stop
 @section('content')
+
+@if ($problem == null)
+	<h1><b>ACCESS DENIED</b></h1>
+	<h3>You're not a member of this course</h3>
+	<h3>If you want to try this problem, please enroll in this course: <br/><a href="{{url('/all-courses')}}">{{$courseName}}</a></h3>
+@else
     <div id="sourceModal" class="modal fade">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -377,4 +385,5 @@
 
         </div>
     </div>
+@endif
 @endsection
