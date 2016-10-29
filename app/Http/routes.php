@@ -29,7 +29,8 @@ Route::get('/exams/{exam_id}/problems/{problem_id}', 'ExamController@showProblem
 Route::get('/exams/{exam_id}/problems/{problem_id}/submissionTable', 'SubmissionController@examSubmissionDetail')->middleware('auth');
 Route::get('/exams/{exam_id}/problems/{problem_id}/countDown','ExamController@countDown')->middleware('auth');
 
-
+Route::get('/admin/edit/{course_id}/{problem_id}','AdminController@editProblem')->middleware('auth');
+Route::get('/admin/add','AdminController@addProblem')->middleware('auth');
 
 Route::get('/submitAjax', function(){
     if(Request::ajax()){
