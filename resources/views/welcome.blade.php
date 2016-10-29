@@ -56,7 +56,7 @@
 		} else if ($hour > 4) {
 			$greating = "Good morning";
 		} else {
-			$greating = "Goog night";
+			$greating = "Good night";
 		} 
 		
 	if(!Auth::guest()) $unsubmitted = $statistic->getNumOfUnsubmit();
