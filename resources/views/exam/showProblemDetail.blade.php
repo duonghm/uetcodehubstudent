@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('extendedHead')
-    <meta name="csrf-token" content="{{ csrf_token() }}"/>
+    {{--<meta name="csrf-token" content="{{ csrf_token() }}"/>--}}
     <link href="{{URL::asset('assets/global/plugins/bootstrap-toastr/toastr.min.css')}}" rel="stylesheet"
           type="text/css">
 @endsection
@@ -12,6 +12,7 @@
 @endsection
 
 @section('script')
+@if ($problem != null)
     <script type="text/javascript">
         $('#expand-button').click(function (e) {
             $('#editor-box').toggleClass('fullscreen');
@@ -43,14 +44,30 @@
                     editor.getSession().setMode("ace/mode/c_cpp");
             }
         });
+		
+		var prevPage = getParameterByName("page");
+		console.log(prevPage);
+		$('#backbtn').click(function(){
+			document.location = "{{ URL('/exams/'.$examId.'/') }}";
+		});
+		
+		function getParameterByName(name) {
+			url = window.location.href;
+			name = name.replace(/[\[\]]/g, "\\$&");
+			var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+				results = regex.exec(url);
+			if (!results) return null;
+			if (!results[2]) return '';
+			return decodeURIComponent(results[2].replace(/\+/g, " "));
+		}
     </script>
     <?php
-    $templateCode = $problem->templateCode;
-    if($templateCode == null){
-        $templateCode = "''";
-    } else{
-        $templateCode = json_encode($templateCode);
-    }
+        $templateCode = $problem->templateCode;
+        if($templateCode == null){
+            $templateCode = "''";
+        } else{
+            $templateCode = json_encode($templateCode);
+        }
 
 
     ?>
@@ -85,14 +102,13 @@
 		
 		var mTimer = setInterval(timeTick, 1000);
 	</script>
-	
     <script>
         String.prototype.replaceAll = function(search, replacement) {
             var target = this;
             return target.replace(new RegExp(search, 'g'), replacement);
         };
         var templateText = <?=$templateCode?>;
-        var READONLY_MARK = "// readonly";
+        var INSERT_MARK = "//insert";
 
         // ACE Editor setting
         var editor = ace.edit("editor");
@@ -103,8 +119,8 @@
             textarea.val(editor.getSession().getValue());
         });
 
-        if(templateText.indexOf(READONLY_MARK) !== 1){
-            editor.getSession().setValue(templateText.replaceAll(READONLY_MARK, ''));
+        if(templateText.indexOf(INSERT_MARK) !== 1){
+            editor.getSession().setValue(templateText.replaceAll(INSERT_MARK, ''));
         }else{
             editor.getSession().setValue(templateText);
         }
@@ -169,10 +185,12 @@
 
         function getReadonlyCode(templateText){
             var blocks = [];
-            var lines = templateText.split('\n');
-            for(var i=0; i<lines.length; i++){
-                if(lines[i].indexOf(READONLY_MARK) !== -1){
-                    blocks.push(new Range(i,0,i+1,0));
+            if(templateText != ""){
+                var lines = templateText.split('\n');
+                for(var i=0; i<lines.length; i++){
+                    if(lines[i].indexOf(INSERT_MARK) == -1){
+                        blocks.push(new Range(i,0,i+1,0));
+                    }
                 }
             }
             return blocks;
@@ -185,65 +203,146 @@
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
+		
+		function reloadSubmissionTable() {
+			$('#result').load('{{url(Request::path().'/submissionTable')}}');
+		}
 
         $(document).ready(function () {
+			var ajaxGetTimes = 0;
+			var blockSubmitBtn = false;
             $('#mytabs').tabs();
             $('#result').load('{{url(Request::path().'/submissionTable')}}');
 
-            $(function () {
-                function callAjax() {
-                    console.log('{{url(Request::path().'/submissionTable')}}');
-                    $('#result').load('{{url(Request::path().'/submissionTable')}}')
-                }
-                setInterval(callAjax, 5000);
-            });
+            function refreshSubmissionTable() {
+				ajaxGetTimes++;
+				if (ajaxGetTimes < 6) {
+					//console.log(ajaxGetTimes+'{{url(Request::path().'/submissionTable')}}');
+					$('#result').load('{{url(Request::path().'/submissionTable')}}');
+					setTimeout(refreshSubmissionTable, 5000);
+				}
+            }
+			
+			function getSubmissionTable() {
+				if (ajaxGetTimes == 0) {
+					refreshSubmissionTable();
+				} else {
+					ajaxGetTimes = 0;
+				}
+			}
+			
+			function unblockSubmitBtn() {
+				blockSubmitBtn = false;
+				$("#submit-button").html("SUBMIT");
+			}
 
             $('#frmSubmit').submit(function () {
-                var _sourceCode = $('#source_code').val();
-                var _language = $('#language').val();
-                $.ajax({
-                    type: "POST",
-                    url: "{{url('/submitExam')}}",
-                    timeout: 5000,
-                    data: {
-                        sourceCode: _sourceCode,
-                        language: _language,
-                        examId: {{$examId}},
-                        problemId: {{$problem->problemId}},
-                        problemCode: '{{$problem->problemCode}}'
-                    },
-                    success: function (data) {
-                        console.log(data);//
-                        if (data == 'OK') {
-                            //alert('submit OK');
-                            $('#mytabs').tabs("option", "active", 1);
-                            toastr.success("Submission notifications", "Your submission is sent successfully");
-                        }else if(data == 'Timeout'){
-                            toastr.warning("Submission notifications", "Your test was finished");
-                        }else{
-                            //alert('something wrong');
-                            toastr.error("Submission notifications", "Error to submit submission");
-                        }
-
-                    },
-                    error: function (xhr, ajaxOptions, thrownError) {
-                        console.log("Something error");
-                        alert(xhr.status);
-                        alert(ajaxOptions);
-                        alert(thrownError);
-                    }
-                });
+				if (!blockSubmitBtn) {
+					blockSubmitBtn = true;
+					//setTimeout(unblockSubmitBtn, 5000);
+					$("#submit-button").html("<img height=\"14\" width=\"14\" src=\"{{URL::asset('assets/layouts/layout/img/loading_submit.gif')}}\" /> LOADING...");
+					
+					var _sourceCode = $('#source_code').val();
+					var _language = $('#language').val();
+					if (_sourceCode == "" || _sourceCode === undefined) {
+						unblockSubmitBtn();
+						toastr.error("Error", "Cannot submit empty code");
+					} else {
+						$.ajax({
+							type: "POST",
+							url: "{{url('/submitExam')}}",
+							timeout: 5000,
+							data: {
+								sourceCode: _sourceCode,
+								language: _language,
+								examId: {{$examId}},
+								problemId: {{$problem->problemId}},
+								problemCode: '{{$problem->problemCode}}'
+							},
+							success: function (data) {
+								unblockSubmitBtn();
+								console.log(data);//
+								if (data == 'OK') {
+									//alert('submit OK');
+									$('#mytabs').tabs("option", "active", 1);
+									getSubmissionTable();
+									toastr.success("Submission notifications", "Your submission is sent successfully");
+								} else if(data == 'Timeout'){
+									toastr.error("Cannot submit", "Your test was finished");
+								}else{
+									//alert('something wrong');
+									getSubmissionTable();
+									toastr.error("Submission notifications", "Error to submit submission");
+								}
+		
+							},
+							error: function (xhr, ajaxOptions, thrownError) {
+								unblockSubmitBtn();
+								alert(xhr.status);
+								alert(ajaxOptions);
+								alert(thrownError);
+							}
+						});
+					}
+				}
             });
         });
     </script>
 
     <script>
+		var sourceToCopy = "";
         function showSource(source) {
             $('#sourceText')[0].innerText = source;
+			//sourceToCopy = decodeURI(source);
+			sourceToCopy = source;
         }
+		
+		$("#copybtn").click(function(){
+			copyTextToClipboard(sourceToCopy);
+			toastr.success("Copied code!", "");
+		});
+		
+		$("#editorcopybtn").click(function(){
+			copyTextToClipboard($('#source_code').val());
+			$("#editorcopybtn").html("Copied!");
+			setTimeout(function() {$("#editorcopybtn").html("COPY ALL")}, 1000);
+		});
+		
+		function copyTextToClipboard(text) {
+			var textArea = document.createElement("textarea");
+			textArea.style.position = 'fixed';
+			textArea.style.top = 0;
+			textArea.style.left = 0;
+			textArea.style.width = '2em';
+			textArea.style.height = '2em';
+			textArea.style.padding = 0;
+			textArea.style.border = 'none';
+			textArea.style.outline = 'none';
+			textArea.style.boxShadow = 'none';
+			textArea.style.background = 'transparent';
+			textArea.value = text;
+			document.body.appendChild(textArea);
+			textArea.select();
+			try {
+				var successful = document.execCommand('copy');
+				var msg = successful ? 'successful' : 'unsuccessful';
+				console.log('Copying text command was ' + msg);
+			} catch (err) {
+				console.log('Oops, unable to copy');
+			}
+			document.body.removeChild(textArea);
+		}
+
     </script>
+@endif
 @stop
 @section('content')
+
+@if ($problem == null)
+	<h1><b>ACCESS DENIED</b></h1>
+	<h3>You're not a member of this course</h3>
+	<h3>If you want to try this problem, please enroll in this course: <br/><a href="{{url('/all-courses')}}">{{$courseName}}</a></h3>
+@else
     <div id="sourceModal" class="modal fade">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -257,7 +356,10 @@
                     <pre id="sourceText"></pre>
                 </div>
                 <!-- dialog buttons -->
-                <div class="modal-footer"><button type="button" class="btn btn-primary" data-dismiss="modal">OK</button></div>
+                <div class="modal-footer">
+					<button type="button" class="btn btn-primary" data-dismiss="modal" id="copybtn">Copy all</button>
+					<button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
+				</div>
             </div>
         </div>
     </div>
@@ -268,9 +370,10 @@
                 <div class="portlet-title">
 
                     <div class="caption">
-                        <i class=" icon-layers font-green"></i>
-                        <span class="caption-subject font-green bold uppercase">
-                            Mô tả bài toán
+						<button type="button" id="backbtn" class="btn btn-primary"><i class="fa fa-arrow-left"></i> BACK </button>
+						&nbsp&nbsp
+                        <span class="caption-subject font-blue bold uppercase">
+                            {{$problem->problemCode}}
                         </span>
                     </div>
                 </div>
@@ -290,9 +393,6 @@
                             </div>
                             <div>{!! $problem->outputDescription !!}</div>
                         </div>
-                        <div class="btn" style="position: absolute; bottom: 20px; text-align: right; width: 80%;">
-                            <a href="{{ URL('/exams/'.$examId.'/') }}"> Back </a>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -302,7 +402,7 @@
         <div class="col-md-9">
             <div class="portlet light portlet-fit full-height-content full-height-content-scrollable ">
                 <div class="portlet-body">
-                    <div style="float: right;font-family: inherit;font-weight: bold; color: cornflowerblue;">
+					<div style="float: right;font-family: inherit;font-weight: bold; color: cornflowerblue;">
                         <span id="countDownTimer">Loading timer...</span>
                     </div>
                     <div class="box">
@@ -339,18 +439,22 @@
                                                 </div>
                                             </div>
                                             <div class="form-group" style="margin-top: 5px">
-                                                <div class="pull-left" style="width:150px">
+                                                <div class="pull-left" style="width:80px; margin-right: 5px;">
                                                     <select class="form-control" name="language" id="language"
                                                             onchange="changeLanguage()">
                                                         <option value="Cpp">C++</option>
                                                         <option value="C">C</option>
-                                                        {{--<option value="Java">Java</option>--}}
+                                                        <option value="Java">Java</option>
                                                     </select>
                                                 </div>
                                                 <div>
+													<button class="btn btn-primary pull-left" type="button" id="editorcopybtn"
+														style="margin-right: 2px;">
+                                                        COPY ALL
+                                                    </button>
                                                     <button class="btn btn-primary pull-right" type="submit"
                                                             id="submit-button">
-                                                        Submit
+                                                        SUBMIT
                                                     </button>
                                                 </div>
                                             </div>
@@ -361,7 +465,7 @@
                                 </div>
                                 <div role="tabpanel"
                                      class="tab-pane {{Session::get('is_submitted') == true ? 'active' : ''}}"
-                                     id="result">
+									 id="result">
                                     <div id="ajaxDemoContent">Demo content</div>
                                     {{--@include(url('/'))--}}
                                 </div>
@@ -373,4 +477,5 @@
 
         </div>
     </div>
+@endif
 @endsection

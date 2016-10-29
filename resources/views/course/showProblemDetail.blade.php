@@ -407,7 +407,7 @@
                                                 </div>
                                             </div>
                                             <div class="form-group" style="margin-top: 5px">
-                                                <div class="pull-left" style="width:150px; margin-right: 5px;">
+                                                <div class="pull-left" style="width:80px; margin-right: 5px;">
                                                     <select class="form-control" name="language" id="language"
                                                             onchange="changeLanguage()">
                                                         <option value="Cpp">C++</option>
