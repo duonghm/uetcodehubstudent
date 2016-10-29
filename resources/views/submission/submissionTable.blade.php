@@ -2,6 +2,15 @@
     <div class="portlet box red">
         <div class="portlet-title">
             <div class="caption">All Result</div>
+			<script>
+				setTimeout(function() {
+					document.getElementById("refreshSubmission").style.display="inline";
+				}, 6000);
+			</script>
+			<button class="btn btn-danger pull-right" type="submit" id="refreshSubmission"
+				onclick="reloadSubmissionTable();" style="display: none;">
+                REFRESH
+            </button>
         </div>
         <div class="portlet-body">
             <div class="table-scrollable">
