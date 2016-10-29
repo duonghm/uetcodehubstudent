@@ -264,7 +264,8 @@
 		var sourceToCopy = "";
         function showSource(source) {
             $('#sourceText')[0].innerText = source;
-			sourceToCopy = decodeURI(source);
+			//sourceToCopy = decodeURI(source);
+			sourceToCopy = source;
         }
 		
 		$("#copybtn").click(function(){
@@ -275,7 +276,7 @@
 		$("#editorcopybtn").click(function(){
 			copyTextToClipboard($('#source_code').val());
 			$("#editorcopybtn").html("Copied!");
-			setTimeout(function() {$("#editorcopybtn").html("COPY")}, 1000);
+			setTimeout(function() {$("#editorcopybtn").html("COPY ALL")}, 1000);
 		});
 		
 		function copyTextToClipboard(text) {
@@ -297,7 +298,6 @@
 				var successful = document.execCommand('copy');
 				var msg = successful ? 'successful' : 'unsuccessful';
 				console.log('Copying text command was ' + msg);
-				$("#copybtn").html("Copied!");
 			} catch (err) {
 				console.log('Oops, unable to copy');
 			}
