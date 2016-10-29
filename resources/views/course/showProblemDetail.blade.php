@@ -176,6 +176,10 @@
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
+		
+		function reloadSubmissionTable() {
+			$('#result').load('{{url(Request::path().'/submissionTable')}}');
+		}
 
         $(document).ready(function () {
 			var ajaxGetTimes = 0;
@@ -185,7 +189,7 @@
 
             function refreshSubmissionTable() {
 				ajaxGetTimes++;
-				if (ajaxGetTimes < 4) {
+				if (ajaxGetTimes < 6) {
 					//console.log(ajaxGetTimes+'{{url(Request::path().'/submissionTable')}}');
 					$('#result').load('{{url(Request::path().'/submissionTable')}}');
 					setTimeout(refreshSubmissionTable, 5000);
@@ -202,55 +206,104 @@
 			
 			function unblockSubmitBtn() {
 				blockSubmitBtn = false;
+				$("#submit-button").html("SUBMIT");
 			}
 
             $('#frmSubmit').submit(function () {
 				if (!blockSubmitBtn) {
 					blockSubmitBtn = true;
-					setTimeout(unblockSubmitBtn, 5000);
+					//setTimeout(unblockSubmitBtn, 5000);
+					$("#submit-button").html("<img height=\"14\" width=\"14\" src=\"{{URL::asset('assets/layouts/layout/img/loading_submit.gif')}}\" /> LOADING...");
 					
 					var _sourceCode = $('#source_code').val();
 					var _language = $('#language').val();
-					$.ajax({
-						type: "POST",
-						url: "{{url('/submitPostAjax')}}",
-						timeout: 5000,
-						data: {
-							sourceCode: _sourceCode,
-							language: _language,
-							courseId: {{$courseId}},
-							problemId: {{$problem->problemId}},
-							problemCode: '{{$problem->problemCode}}'
-						},
-						success: function (data) {
-							console.log(data);//
-							if (data == 'OK') {
-								//alert('submit OK');
-								$('#mytabs').tabs("option", "active", 1);
-								getSubmissionTable();
-								toastr.success("Submission notifications", "Your submission is sent successfully");
-							} else {
-								//alert('something wrong');
-								getSubmissionTable();
-								toastr.error("Submission notifications", "Error to submit submission");
+					if (_sourceCode == "" || _sourceCode === undefined) {
+						unblockSubmitBtn();
+						toastr.error("Error", "Cannot submit empty code");
+					} else {
+						$.ajax({
+							type: "POST",
+							url: "{{url('/submitPostAjax')}}",
+							timeout: 5000,
+							data: {
+								sourceCode: _sourceCode,
+								language: _language,
+								courseId: {{$courseId}},
+								problemId: {{$problem->problemId}},
+								problemCode: '{{$problem->problemCode}}'
+							},
+							success: function (data) {
+								unblockSubmitBtn();
+								console.log(data);//
+								if (data == 'OK') {
+									//alert('submit OK');
+									$('#mytabs').tabs("option", "active", 1);
+									getSubmissionTable();
+									toastr.success("Submission notifications", "Your submission is sent successfully");
+								} else {
+									//alert('something wrong');
+									getSubmissionTable();
+									toastr.error("Submission notifications", "Error to submit submission");
+								}
+		
+							},
+							error: function (xhr, ajaxOptions, thrownError) {
+								unblockSubmitBtn();
+								alert(xhr.status);
+								alert(ajaxOptions);
+								alert(thrownError);
 							}
-	
-						},
-						error: function (xhr, ajaxOptions, thrownError) {
-							alert(xhr.status);
-							alert(ajaxOptions);
-							alert(thrownError);
-						}
-					});
+						});
+					}
 				}
             });
         });
     </script>
 
     <script>
+		var sourceToCopy = "";
         function showSource(source) {
             $('#sourceText')[0].innerText = source;
+			sourceToCopy = decodeURI(source);
         }
+		
+		$("#copybtn").click(function(){
+			copyTextToClipboard(sourceToCopy);
+			toastr.success("Copied code!", "");
+		});
+		
+		$("#editorcopybtn").click(function(){
+			copyTextToClipboard($('#source_code').val());
+			$("#editorcopybtn").html("Copied!");
+			setTimeout(function() {$("#editorcopybtn").html("COPY")}, 1000);
+		});
+		
+		function copyTextToClipboard(text) {
+			var textArea = document.createElement("textarea");
+			textArea.style.position = 'fixed';
+			textArea.style.top = 0;
+			textArea.style.left = 0;
+			textArea.style.width = '2em';
+			textArea.style.height = '2em';
+			textArea.style.padding = 0;
+			textArea.style.border = 'none';
+			textArea.style.outline = 'none';
+			textArea.style.boxShadow = 'none';
+			textArea.style.background = 'transparent';
+			textArea.value = text;
+			document.body.appendChild(textArea);
+			textArea.select();
+			try {
+				var successful = document.execCommand('copy');
+				var msg = successful ? 'successful' : 'unsuccessful';
+				console.log('Copying text command was ' + msg);
+				$("#copybtn").html("Copied!");
+			} catch (err) {
+				console.log('Oops, unable to copy');
+			}
+			document.body.removeChild(textArea);
+		}
+
     </script>
 @endif
 @stop
@@ -274,7 +327,10 @@
                     <pre id="sourceText"></pre>
                 </div>
                 <!-- dialog buttons -->
-                <div class="modal-footer"><button type="button" class="btn btn-primary" data-dismiss="modal">OK</button></div>
+                <div class="modal-footer">
+					<button type="button" class="btn btn-primary" data-dismiss="modal" id="copybtn">Copy all</button>
+					<button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
+				</div>
             </div>
         </div>
     </div>
@@ -351,7 +407,7 @@
                                                 </div>
                                             </div>
                                             <div class="form-group" style="margin-top: 5px">
-                                                <div class="pull-left" style="width:150px">
+                                                <div class="pull-left" style="width:150px; margin-right: 5px;">
                                                     <select class="form-control" name="language" id="language"
                                                             onchange="changeLanguage()">
                                                         <option value="Cpp">C++</option>
@@ -360,9 +416,13 @@
                                                     </select>
                                                 </div>
                                                 <div>
+													<button class="btn btn-primary pull-left" type="button" id="editorcopybtn"
+														style="margin-right: 2px;">
+                                                        COPY ALL
+                                                    </button>
                                                     <button class="btn btn-primary pull-right" type="submit"
                                                             id="submit-button">
-                                                        Submit
+                                                        SUBMIT
                                                     </button>
                                                 </div>
                                             </div>
@@ -373,7 +433,7 @@
                                 </div>
                                 <div role="tabpanel"
                                      class="tab-pane {{Session::get('is_submitted') == true ? 'active' : ''}}"
-                                     id="result">
+									 id="result">
                                     <div id="ajaxDemoContent">Demo content</div>
                                     {{--@include(url('/'))--}}
                                 </div>
