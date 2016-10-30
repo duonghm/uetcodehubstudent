@@ -191,8 +191,14 @@
                                                         <td>
                                                             <a href="javascript:;"
                                                                class="primary-link">{{$rank->rank}}</a>
+															@if($rank->rank == 1)
+															<img style="vertical-align:middle; float:right;" height="25px"
+																src="{{url('/assets/layouts/layout/img/crown.png')}}">
+															@endif
                                                         </td>
-                                                        <td><b>{{$rank->firstname}} {{$rank->lastname}}</b> <br/>{{$rank->username}}</td>
+                                                        <td>
+															<b>{{$rank->firstname}} {{$rank->lastname}}</b> <br/> {{$rank->username}}
+														</td>
                                                         <td>
                                                             @if($rank->totalScore != -1)
                                                                 {{$rank->totalScore}}
