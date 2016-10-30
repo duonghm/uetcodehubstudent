@@ -57,7 +57,7 @@ class AdminController extends Controller {
 				VALUE (?, ?, ?, ?, ?)',
 				[$courseId, $this->problem->problemId, $hardLevel, $scoreInCourse, 1]
             );
-			return 'OK';
+			return 'OK'.$this->problem->problemId;
         } catch (\Exception $ex) {
             echo $ex->getMessage();
             return 'Error';

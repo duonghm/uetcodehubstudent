@@ -48,9 +48,10 @@ $("#submit-button").click(function(){
 		},
 		success: function (data) {
 			console.log(data);//
-			if (data == 'OK') {
+			if (data.substring(0, 2) == 'OK') {
 				//alert('submit OK');
-				toastr.success("Submission notifications", "Your submission is sent successfully");
+				window.location = "{{url('/my-courses')}}/"+_courseId+"/problems/"+data.match(/\d+/)[0];
+				toastr.success("Success!", "New problem has been added");
 			} else {
 				//alert('something wrong');
 				toastr.error("Submission notifications", "Error to submit submission");
