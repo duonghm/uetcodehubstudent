@@ -6,121 +6,108 @@
 
 @section('content')
     <div class="row">
-        <div class="col-md-12">
-            <!-- BEGIN PROFILE SIDEBAR -->
-            <div class="profile-sidebar">
-                <!-- PORTLET MAIN -->
-                <div class="portlet light profile-sidebar-portlet ">
-                    <!-- SIDEBAR USERPIC -->
-                    <div class="profile-userpic">
-                        <img src="{{URL('assets/pages/media/profile/default_user.jpg')}}" class="img-responsive" alt="">
-                    </div>
-                    <!-- END SIDEBAR USERPIC -->
-                    <!-- SIDEBAR USER TITLE -->
-                    <div class="profile-usertitle">
-                        <div class="profile-usertitle-name"> {{Auth::user()->getFullname()}}</div>
-                        <div class="profile-usertitle-job"> </div>
-                    </div>
-                    <!-- END SIDEBAR USER TITLE -->
-
-                    <!-- PORTLET MAIN -->
-                    <div class="portlet light ">
-                        <!-- STAT -->
-                        <div class="row list-separated profile-stat">
-                            <div class="col-md-4 col-sm-4 col-xs-6">
-                                <div class="uppercase profile-stat-title"> {{Auth::user()->courses()->count()}}</div>
-                                <div class="uppercase profile-stat-text"> Courses</div>
-                            </div>
-                            <div class="col-md-4 col-sm-4 col-xs-6">
-                                <div class="uppercase profile-stat-title"> {{Auth::user()->totalScore()}}</div>
-                                <div class="uppercase profile-stat-text"> Score</div>
-                            </div>
-                            <div class="col-md-4 col-sm-4 col-xs-6">
-                                <div class="uppercase profile-stat-title"> {{Auth::user()->currentRanking()}}</div>
-                                <div class="uppercase profile-stat-text"> Ranking</div>
-                            </div>
-                        </div>
-                        <!-- END STAT -->
-
-                    </div>
-                    <!-- END PORTLET MAIN -->
-                    <!-- END MENU -->
-                </div>
-                <!-- END PORTLET MAIN -->
-
-            </div>
+		<div class="col-md-6">
+		<div class="row">
+			<div class="col-md-12">
+				<!-- BEGIN PROFILE SIDEBAR -->
+					<!-- PORTLET MAIN -->
+					<div class="portlet light ">
+						<center>
+							<img height="100px" src="{{URL('assets/pages/media/profile/default_user.jpg')}}">
+						</center>
+						<!-- END SIDEBAR USERPIC -->
+						<!-- SIDEBAR USER TITLE -->
+						<div class="profile-usertitle">
+							<div class="profile-usertitle-name"> {{Auth::user()->getFullname()}}</div>
+							<div class="profile-usertitle-job"> </div>
+						</div>
+						<!-- END SIDEBAR USER TITLE -->
+						<div class="row list-separated profile-stat">
+							<div class="col-md-4 col-sm-4 col-xs-6">
+								<div class="uppercase profile-stat-title"> {{Auth::user()->courses()->count()}}</div>
+								<div class="uppercase profile-stat-text"> Courses</div>
+							</div>
+							<div class="col-md-4 col-sm-4 col-xs-6">
+								<div class="uppercase profile-stat-title"> {{Auth::user()->totalScore()}}</div>
+								<div class="uppercase profile-stat-text"> Score</div>
+							</div>
+							<div class="col-md-4 col-sm-4 col-xs-6">
+								<div class="uppercase profile-stat-title"> {{Auth::user()->currentRanking()}}</div>
+								<div class="uppercase profile-stat-text"> Ranking</div>
+							</div>
+						</div>
+	
+				</div>
+			</div>
             <!-- END BEGIN PROFILE SIDEBAR -->
-
-            <!-- BEGIN PROFILE CONTENT -->
-            <div class="profile-content">
-                <div class="row">
-                    <div class="col-md-6">
-                        <!-- BEGIN PORTLET -->
-                        <div class="portlet light ">
-                            <div class="portlet-title">
-                                <div class="caption caption-md">
-                                    <i class="icon-bar-chart theme-font hide"></i>
-                                    <span class="caption-subject font-blue-madison bold uppercase">Your Course</span>
+            <div class="col-md-12">
+                <!-- BEGIN PORTLET -->
+                <div class="portlet light ">
+                    <div class="portlet-title">
+                        <div class="caption caption-md">
+                            <i class="icon-bar-chart theme-font hide"></i>
+                            <span class="caption-subject font-blue-madison bold uppercase">Joined Courses</span>
+                        </div>
+                    </div>
+                    <div class="portlet-body">
+                        <!--div class="row number-stats margin-bottom-30">
+                            <div class="col-md-6 col-sm-6 col-xs-6">
+                                <div class="stat-left">
+                                    <div class="stat-chart">
+                                        <!-- do not line break "sparkline_bar" div. sparkline chart has an issue when the container div has line break>
+                                        <div id="sparkline_bar"></div>
+                                    </div>
+                                    <div class="stat-number">
+                                        <div class="title"> Total</div>
+                                        <div class="number"> ?</div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="portlet-body">
-                                <div class="row number-stats margin-bottom-30">
-                                    <div class="col-md-6 col-sm-6 col-xs-6">
-                                        <div class="stat-left">
-                                            <div class="stat-chart">
-                                                <!-- do not line break "sparkline_bar" div. sparkline chart has an issue when the container div has line break -->
-                                                <div id="sparkline_bar"></div>
-                                            </div>
-                                            <div class="stat-number">
-                                                <div class="title"> Total</div>
-                                                <div class="number"> ?</div>
-                                            </div>
-                                        </div>
+                            <div class="col-md-6 col-sm-6 col-xs-6">
+                                <div class="stat-right">
+                                    <div class="stat-chart">
+                                        <!-- do not line break "sparkline_bar" div. sparkline chart has an issue when the container div has line break >
+                                        <div id="sparkline_bar2"></div>
                                     </div>
-                                    <div class="col-md-6 col-sm-6 col-xs-6">
-                                        <div class="stat-right">
-                                            <div class="stat-chart">
-                                                <!-- do not line break "sparkline_bar" div. sparkline chart has an issue when the container div has line break -->
-                                                <div id="sparkline_bar2"></div>
-                                            </div>
-                                            <div class="stat-number">
-                                                <div class="title"> Finished Rate</div>
-                                                <div class="number"> ?</div>
-                                            </div>
-                                        </div>
+                                    <div class="stat-number">
+                                        <div class="title"> Finished Rate</div>
+                                        <div class="number"> ?</div>
                                     </div>
                                 </div>
-                                <div class="table-scrollable table-scrollable-borderless">
-                                    <div class="scroller" style="height: 200px;" data-always-visible="1"
-                                         data-rail-visible1="0" data-handle-color="#D7DCE2">
-                                        <table class="table table-hover table-light">
-                                            <thead>
-                                            <tr class="uppercase">
-                                                <th> Course</th>
-                                                <th> Semester</th>
-                                                <th> Remain</th>
-                                                <th> Rate</th>
-                                            </tr>
-                                            </thead>
-                                            <?php $courses = Auth::user()->Courses?>
-                                            @foreach($courses as $course)
-                                                <tr>
-                                                    <td>
-                                                        <a href="javascript:;"
-                                                           class="primary-link">{{$course->courseName}}</a>
-                                                    </td>
-                                                    <td> {{$course->semester->semesterName}}</td>
-                                                    <td> ?</td>
-                                                    <td><span class="bold theme-font">?</span></td>
-                                                </tr>
-                                            @endforeach
-                                        </table>
-                                    </div>
-                                </div>
+                            </div>
+                        </div-->
+                        <div class="table-scrollable table-scrollable-borderless">
+                            <div class="scroller" style="height: 200px;" data-always-visible="1"
+                                 data-rail-visible1="0" data-handle-color="#D7DCE2">
+                                <table class="table table-hover table-light">
+                                    <thead>
+                                    <tr class="uppercase">
+                                        <th> Course</th>
+                                        <th> Semester</th>
+                                        <!--th> Remain</th>
+                                        <th> Rate</th-->
+                                    </tr>
+                                    </thead>
+                                    <?php $courses = Auth::user()->Courses?>
+                                    @foreach($courses as $course)
+                                        <tr>
+                                            <td>
+                                                <a href="javascript:;"
+                                                   class="primary-link">{{$course->courseName}}</a>
+                                            </td>
+                                            <td> {{$course->semester->semesterName}}</td>
+                                            <!--td> ?</td>
+                                            <td><span class="bold theme-font">?</span></td-->
+                                        </tr>
+                                    @endforeach
+                                </table>
                             </div>
                         </div>
-                        <!-- END PORTLET -->
                     </div>
+                </div>
+			</div>
+		</div>
+	</div>
                     <div class="col-md-6">
                         <!-- BEGIN PORTLET -->
                         <div class="portlet light ">
@@ -130,10 +117,10 @@
                                     <span class="caption-subject font-blue-madison bold uppercase">Submission & Ranking</span>
                                 </div>
                                 <ul class="nav nav-tabs">
-                                    <li class="active">
+                                    <li>
                                         <a href="#tab_1_1" data-toggle="tab"> Submissions </a>
                                     </li>
-                                    <li>
+                                    <li class="active">
                                         <a href="#tab_1_2" data-toggle="tab"> Ranking </a>
                                     </li>
                                 </ul>
@@ -141,7 +128,7 @@
                             <div class="portlet-body">
                                 <!--BEGIN TABS-->
                                 <div class="tab-content">
-                                    <div class="tab-pane active" id="tab_1_1">
+                                    <div class="tab-pane" id="tab_1_1">
                                         <div class="scroller" style="height: 500px;" data-always-visible="1"
                                              data-rail-visible1="0" data-handle-color="#D7DCE2">
                                             <ul class="feeds">
@@ -186,7 +173,7 @@
                                             </ul>
                                         </div>
                                     </div>
-                                    <div class="tab-pane" id="tab_1_2">
+                                    <div class="tab-pane active" id="tab_1_2">
                                         <?php $rankingTable = $statistic->getRankingTable() ?>
                                         <div class="scroller" style="height: 500px;" data-always-visible="1"
                                              data-rail-visible1="0" data-handle-color="#D7DCE2">
@@ -198,13 +185,14 @@
                                                     <th width="30%"> Score</th>
                                                 </tr>
                                                 </thead>
+												<tbody>
                                                 @foreach($rankingTable as $rank)
                                                     <tr>
                                                         <td>
                                                             <a href="javascript:;"
                                                                class="primary-link">{{$rank->rank}}</a>
                                                         </td>
-                                                        <td>{{$rank->username}} <br/>{{$rank->firstname}} {{$rank->lastname}}</td>
+                                                        <td><b>{{$rank->firstname}} {{$rank->lastname}}</b> <br/>{{$rank->username}}</td>
                                                         <td>
                                                             @if($rank->totalScore != -1)
                                                                 {{$rank->totalScore}}
@@ -213,6 +201,7 @@
                                                             @endif
                                                         </td>
                                                     </tr>
+												</tbody>
                                                 @endforeach
                                             </table>
                                         </div>
