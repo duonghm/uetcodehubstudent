@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 class Problem extends Model
 {
     protected $primaryKey = 'problemId';
+	public $timestamps  = false;
     public function user()
     {
         return $this->belongsTo('App\Models\User');

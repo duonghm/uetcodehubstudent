@@ -56,6 +56,8 @@ Route::post('/submitExam', ['uses' => 'JudgeController@submitExam']);
 
 Route::post('/changePassword', ['uses' => 'HomeController@changePassword']);
 
+Route::post('/admin/submitNewProblem', ['uses' => 'AdminController@submitNewProblem']);
+
 \Event::listen('Illuminate\Database\Events\QueryExecuted', function ($query) {
     //var_dump($query->sql);
     //var_dump($query->bindings);
