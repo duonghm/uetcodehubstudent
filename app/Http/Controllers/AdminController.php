@@ -22,14 +22,24 @@ use Mockery\CountValidator\Exception;
 class AdminController extends Controller {
     
     public function editProblem($courseId, $problemId){
-        return view('admin.editProblem', compact('courseId', 'problemId'));
+		$allcourses = Course::orderBy('courseName')->where('isActive',1)->get();
+		$courses = Auth::user()->courses->find($courseId);
+		$problems = $courses->problems;
+		$problem = $problems->find($problemId);
+		$row = DB::select(
+                DB::raw(
+                    'SELECT courseName, courseId FROM courses WHERE courseId='.$courseId
+                )
+            );
+		$courseName = $row[0]->courseName;
+        return view('admin.editProblem', compact('courseId', 'problem', 'courseName', 'allcourses'));
     }
 	
 	public function addProblem(){
 		$courseId = 0;
-		$problemId = 0;
+		$problem = null;
 		$allcourses = Course::orderBy('courseName')->where('isActive',1)->get();
-        return view('admin.editProblem', compact('courseId', 'problemId', 'allcourses'));
+        return view('admin.editProblem', compact('courseId', 'problem', 'courseName', 'allcourses'));
     }
 	
 	public function submitNewProblem(Request $request) {
@@ -50,8 +60,7 @@ class AdminController extends Controller {
 			$hardLevel = $request->input('hardLevel');
 			$courseId = $request->input('courseId');
 			
-			//$addResult = addProblemToCourse($this->problem->problemId, $courseId, 
-			//$addResult = addProblemToCourse(103, $courseId, $hardLevel, $scoreInCourse);
+			//$addResult = $this->addProblemToCourse($this->problem->problemId, $courseId, $hardLevel, $scoreInCourse);
 			DB::insert(
                 'INSERT INTO courseproblems (courseId, problemId, hardLevel, scoreInCourse, isActive)
 				VALUE (?, ?, ?, ?, ?)',
