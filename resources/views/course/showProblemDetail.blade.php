@@ -337,7 +337,7 @@
 
     <div class="row">
         <div class="col-md-3">
-            <div id="pl_pr" class="portlet light portlet-fit full-height-content full-height-content-scrollable ">
+            <div id="pl_pr" class="portlet light">
                 <div class="portlet-title">
 
                     <div class="caption">
@@ -349,7 +349,7 @@
                     </div>
                 </div>
                 <div class="portlet-body">
-                    <div class="box" id="problem-content" style="min-height: 415px;">
+                    <div class="box" id="problem-content" style="min-height: 10px;">
                         <div style="background: #E0E0E0; margin-top: 10px; font-weight: bold">Problem statement</div>
                         <div class="box-content" style="text-align: justify; font-family: monospace;">
                             {!! $problem->content !!}
@@ -371,7 +371,7 @@
 
         </div>
         <div class="col-md-9">
-            <div class="portlet light portlet-fit full-height-content full-height-content-scrollable ">
+            <div class="portlet light">
                 <div class="portlet-body">
                     <div class="box">
                         <div id="mytabs" role="tabpanel">
