@@ -98,6 +98,7 @@ function sendSubmit(_action) {
 				toastr.success("Success!", "New problem has been added");
 			} else {
 				//alert('something wrong');
+				alert(data);
 				toastr.error("Submission notifications", "Error to submit submission");
 			}
 	

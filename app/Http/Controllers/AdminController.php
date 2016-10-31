@@ -120,6 +120,8 @@ class AdminController extends Controller {
 					return 'OK'.$problemId;
 					
 				} else if ($request->action == 'copy') {
+					
+					//////////////////////// COPY TO COURSE
 					$courseId = $request->input('courseId');
 					$problemId = $request->input('problemId');
 					$hardLevel = $request->input('hardLevel');
