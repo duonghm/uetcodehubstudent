@@ -8,6 +8,30 @@
 @section('pageScript')
 	<script src="{{URL::asset('assets/global/plugins/bootstrap-toastr/toastr.min.js')}}"
             type="text/javascript"></script>
+<?php
+	if($problem != null) {
+		$_problemCode = $problem->problemCode;
+		$_problemId = $problem->problemId;
+		$_timeLimit = $problem->timelimit;
+		$_hardLevel = $courseProblemInfo->hardLevel;
+		$_defaultScore = $problem->defaultScore;
+		$_scoreInCourse = $courseProblemInfo->scoreInCourse;
+		$_isActive = $problem->isActive;
+		$_courseProblemId = $courseProblemInfo->courseProblemId;
+		$_action = 'edit';
+	} else {
+		$_problemId = 0;
+		$_problemCode = '';
+		$_timeLimit = 1;
+		$_hardLevel = 1;
+		$_defaultScore = 100;
+		$_scoreInCourse = 0;
+		$_isActive = 1;
+		$_courseProblemId = 0;
+		$_action = 'add';
+	}
+
+?>
 @endsection
 
 @section('script')
@@ -19,6 +43,21 @@ $.ajaxSetup({
 });
 
 $("#submit-button").click(function(){
+	var r = confirm("Confirm ?");
+	if (r == true) {
+		sendSubmit("{{ $_action }}");
+	}
+});
+
+$("#copy-button").click(function(){
+	var r = confirm("Confirm ?");
+	if (r == true) {
+		sendSubmit("copy");
+	}
+});
+
+function sendSubmit(_action) {
+	var _problemId = {{ $_problemId }};
 	var _problemCode = $('#problemCode').val().toUpperCase();
 	var _problemContent = $('#problemContent').val().replace(/\n/g, "<br/>\n");
 	var _problemInput = $('#problemInput').val().replace(/\n/g, "<br/>\n");
@@ -27,12 +66,13 @@ $("#submit-button").click(function(){
 	var _defaultScore = $('#score').val();
 	//var _isActive = $('#isactive').val();
 	var _isActive = 1;
-	var _scoreInCourse = $('#scoreinc').val();
+	//var _scoreInCourse = $('#scoreinc').val();
+	var _scoreInCourse = 0;
 	var _hardLevel = $('#hardlevel').val();
 	var _courseId = $('#selectCourse').val();
 	$.ajax({
 		type: "POST",
-		url: "{{url('/admin/submitNewProblem')}}",
+		url: "{{url('/admin/submitProblem')}}",
 		timeout: 5000,
 		data: {
 			problemCode: _problemCode,
@@ -45,7 +85,10 @@ $("#submit-button").click(function(){
 			//courseproblem
 			scoreInCourse: _scoreInCourse,
 			hardLevel: _hardLevel,
-			courseId: _courseId
+			courseId: _courseId, 
+			courseProblemId: {{ $_courseProblemId }},
+			problemId: {{ $_problemId }},
+			action: _action
 		},
 		success: function (data) {
 			console.log(data);//
@@ -65,7 +108,7 @@ $("#submit-button").click(function(){
 			alert(thrownError);
 		}
 	});
-});
+}
 </script>
 @endsection
 
@@ -73,24 +116,6 @@ $("#submit-button").click(function(){
 @endsection
 
 @section('content')
-<?php
-	if($problem != null) {
-		$_problemCode = $problem->problemCode;
-		$_timeLimit = $problem->timelimit;
-		$_hardLevel = $problem->hardLevel;
-		$_defaultScore = $problem->defaultScore;
-		$_scoreInCourse = $problem->scoreInCourse;
-		$_isActive = $problem->isActive;
-	} else {
-		$_problemCode = '';
-		$_timeLimit = 1;
-		$_hardLevel = 1;
-		$_defaultScore = 100;
-		$_scoreInCourse = 0;
-		$_isActive = 1;
-	}
-
-?>
 <div class="row">
     <div class="col-md-6">
         <div id="pl_pr" class="portlet light portlet-fit full-height-content full-height-content-scrollable">
@@ -110,7 +135,7 @@ $("#submit-button").click(function(){
             </div>
             <div class="portlet-body">
                 <div class="box" id="problem-content" style="min-height: 420px;">
-                    <div style="background: #E0E0E0; margin-top: 10px; font-weight: bold">Problem statement (auto add &lt;br/&gt;)</div>
+                    <div style="background: #E0E0E0; margin-top: 10px; font-weight: bold">Problem statement (auto add &lt;br/&gt; on submit)</div>
                     <div class="box-content" style="text-align: justify; font-family: monospace;">
 						@if($problem != null)
 							<textarea id="problemContent" style="height:350px; width:100%;">{{ str_replace('<br/>','',$problem->content) }}</textarea>
@@ -125,23 +150,23 @@ $("#submit-button").click(function(){
 	<div class="col-md-6">
         <div id="pl_pr" class="portlet light portlet-fit full-height-content full-height-content-scrollable">
             <div class="portlet-body">
-                <div class="box" id="problem-content" style="min-height: 600px;">
+                <div class="box" id="problem-content" style="min-height: 550px;">
                     <div style="text-align: justify; font-family: monospace;">
-                        <div style="background: #E0E0E0; margin-top: 10px; font-weight: bold;">Input Description (auto add &lt;br/&gt;)
+                        <div style="background: #E0E0E0; margin-top: 10px; font-weight: bold;">Input Description (auto add &lt;br/&gt; on submit)
                         </div>
 						@if($problem != null)
-							<textarea id="problemInput" style="height:120px; width:100%;">{{ $problem->inputDescription }}</textarea>
+							<textarea id="problemInput" style="height:120px; width:100%;">{{ str_replace('<br/>','',$problem->inputDescription) }}</textarea>
 						@else
 							<textarea id="problemInput" style="height:120px; width:100%;">&lt;code&gt;&lt;/code&gt;</textarea>
 						@endif
                     </div>
                     <div style="text-align: justify; font-family: monospace;">
-                        <div style="background: #E0E0E0; margin-top: 10px; font-weight: bold;">Output Description (auto add &lt;br/&gt;)
+                        <div style="background: #E0E0E0; margin-top: 10px; font-weight: bold;">Output Description (auto add &lt;br/&gt; on submit)
                         </div>
                         @if($problem != null)
-							<textarea id="problemInput" style="height:120px; width:100%;">{{ $problem->outputDescription }}</textarea>
+							<textarea id="problemOutput" style="height:120px; width:100%;">{{ str_replace('<br/>','',$problem->outputDescription) }}</textarea>
 						@else
-							<textarea id="problemInput" style="height:120px; width:100%;">&lt;code&gt;&lt;/code&gt;</textarea>
+							<textarea id="problemOutput" style="height:120px; width:100%;">&lt;code&gt;&lt;/code&gt;</textarea>
 						@endif
                     </div>
 					<br/>
@@ -157,14 +182,17 @@ $("#submit-button").click(function(){
 					</select><br/><br/>
 					Time limit: <input type="text" id="timelimit" value="{{ $_timeLimit }}"/><br/>
 					Hard level: <input type="text" id="hardlevel" value="{{ $_hardLevel }}"/><br/>
-					Score in course: <input type="text" id="scoreinc" value="{{ $_scoreInCourse }}"/><br/>
+					<!--Score in course: <input type="text" id="scoreinc" value="{{ $_scoreInCourse }}"/><br/-->
 					Total score: <input type="text" id="score" value="{{ $_defaultScore }}"/><br/>
 					<!--Is Active: <input type="text" id="isactive" value="1"/><br/-->
 					<br/>
 					<br/>
-					<button class="btn btn-primary pull-right" id="submit-button">
-                        DONE
-                    </button>
+                    @if($problem == null)
+						<button class="btn btn-primary pull-right" id="submit-button">ADD PROBLEM</button>
+					@else
+						<button class="btn btn-primary" id="copy-button">Copy to course</button>
+						<button class="btn btn-primary pull-right" id="submit-button">EDIT PROBLEM</button>
+					@endif
                 </div>
             </div>
         </div>
