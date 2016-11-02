@@ -5,7 +5,7 @@
 			<script>
 				setTimeout(function() {
 					document.getElementById("refreshSubmission").style.display="inline";
-				}, 6000);
+				}, 5000);
 			</script>
 			<button class="btn btn-danger pull-right" type="submit" id="refreshSubmission"
 				onclick="reloadSubmissionTable();" style="display: none;">

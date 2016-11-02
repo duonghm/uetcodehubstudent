@@ -219,7 +219,7 @@
 					var _language = $('#language').val();
 					if (_sourceCode == "" || _sourceCode === undefined) {
 						unblockSubmitBtn();
-						toastr.error("Error", "Cannot submit empty code");
+						toastr.warning("Cannot submit empty code", "Error");
 					} else {
 						$.ajax({
 							type: "POST",
@@ -415,12 +415,12 @@
                                                         <option value="Java">Java</option>
                                                     </select>
                                                 </div>
-                                                <div>
-													<button class="btn btn-primary pull-left" type="button" id="editorcopybtn"
+                                                <div class="pull-right">
+													<button class="btn btn-primary" type="button" id="editorcopybtn"
 														style="margin-right: 2px;">
                                                         COPY ALL
                                                     </button>
-                                                    <button class="btn btn-primary pull-right" type="submit"
+                                                    <button class="btn btn-primary" type="submit"
                                                             id="submit-button">
                                                         SUBMIT
                                                     </button>
