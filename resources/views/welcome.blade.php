@@ -323,11 +323,11 @@
                     <div class="portlet-title">
                         <div class="caption">
                             <i class="icon-share font-blue"></i>
-                            <span class="caption-subject font-blue bold uppercase">TOP HARDEST PROBLEMS</span>
+                            <span class="caption-subject font-blue bold uppercase">UNSUBMITTED PROBLEMS</span>
                         </div>
                     </div>
                     <div class="portlet-body">
-										<?php $hardestTable = $statistic->getHardestTable(); $countProbleme = 1; ?>
+										<?php $unsubmittedProblems = $statistic->getUnsubmittedProblems(); $countProbleme = 1; ?>
                                         <div class="scroller" style="height: 210px;" data-always-visible="1"
                                              data-rail-visible1="0" data-handle-color="#D7DCE2">
                                             <table class="table table-hover table-light">
@@ -338,9 +338,7 @@
                                                     <th width="10%"> Ratio</th>
                                                 </tr>
                                                 </thead>
-                                                @foreach($hardestTable as $probleme)
-												<?php if (strpos($probleme->problemCode, 'TEST') !== false) continue; 
-														if ($countProbleme==11) break;?>
+                                                @foreach($unsubmittedProblems as $probleme)
                                                     <tr>
                                                         <td>
                                                             <a href="javascript:;"
@@ -352,7 +350,7 @@
 															</a>
 														</td>
                                                         <td>
-                                                            {{$probleme->numOfFinishedUser}}/{{$probleme->numOfUser}}={{$probleme->ratio}}
+                                                            abc
                                                         </td>
                                                     </tr>
 												<?php $countProbleme = $countProbleme + 1; ?>

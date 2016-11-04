@@ -49,11 +49,6 @@ namespace App\CustomClass{
             );
         }
 		
-		/*
-			TODO: Update this every 12h. Use temporary table for it?
-			TODO: NEED OPTIMIZING. IT TAKES A VERY LONG WAIT
-		*/
-		
 		public function getHardestTable(){
             return DB::select(
                 DB::raw(
@@ -140,6 +135,40 @@ namespace App\CustomClass{
 				)
 			);
 			return ($row[0]->result);
+		}
+		
+		public function getUnsubmittedProblems() {
+			return DB::select(
+				DB::raw(
+					'SELECT a.problemId, a.courseId, problemCode FROM (
+						SELECT tab11.problemId, tab11.courseId
+						FROM (SELECT tab1.problemId, tab1.courseId, isAct  FROM
+										(SELECT courseproblems.courseId, problemId, isAct
+										FROM courseproblems
+										LEFT JOIN (SELECT courseId, isActive as isAct
+											FROM courses
+											WHERE isActive = 1) AS coursesTab
+										ON courseproblems.courseId = coursesTab.courseId
+										WHERE courseproblems.isActive = 1 AND isAct IS NOT NULL
+										) AS tab1
+									LEFT JOIN
+										(SELECT courseId, userId
+										FROM courseusers
+										WHERE userId = '.Auth::user()->userId.'
+										) AS tab2
+									ON tab1.courseId = tab2.courseId
+									WHERE userId IS NOT NULL
+							) AS tab11
+						LEFT JOIN (SELECT * FROM userproblemscore
+							WHERE userId = '.Auth::user()->userId.'
+							) AS tab12
+						ON tab11.problemId = tab12.problemId AND tab11.courseId = tab12.courseId
+						WHERE userId IS NULL
+					) AS a
+					LEFT JOIN problems
+					ON a.problemId = problems.problemId'
+				)
+			);
 		}
 
     }
