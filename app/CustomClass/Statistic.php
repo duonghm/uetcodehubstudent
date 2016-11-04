@@ -140,12 +140,12 @@ namespace App\CustomClass{
 		public function getUnsubmittedProblems() {
 			return DB::select(
 				DB::raw(
-					'SELECT a.problemId, a.courseId, problemCode FROM (
-						SELECT tab11.problemId, tab11.courseId
-						FROM (SELECT tab1.problemId, tab1.courseId, isAct  FROM
-										(SELECT courseproblems.courseId, problemId, isAct
+					'SELECT a.problemId, a.courseId, problemCode, courseName FROM (
+						SELECT tab11.problemId, tab11.courseId, courseName
+						FROM (SELECT tab1.problemId, tab1.courseId, courseName, isAct  FROM
+										(SELECT courseproblems.courseId, courseName, problemId, isAct
 										FROM courseproblems
-										LEFT JOIN (SELECT courseId, isActive as isAct
+										LEFT JOIN (SELECT courseId, courseName, isActive as isAct
 											FROM courses
 											WHERE isActive = 1) AS coursesTab
 										ON courseproblems.courseId = coursesTab.courseId

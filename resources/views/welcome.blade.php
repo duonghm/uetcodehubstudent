@@ -59,7 +59,11 @@
 			$greating = "Good night";
 		} 
 		
-	if(!Auth::guest()) $unsubmitted = $statistic->getNumOfUnsubmit();
+	if(!Auth::guest()) {
+		//$unsubmitted = $statistic->getNumOfUnsubmit();
+		$unsubmittedProblems = $statistic->getUnsubmittedProblems(); $countProbleme = 1;
+		$unsubmitted = sizeof($unsubmittedProblems);
+	}
 		?>
 	{{$greating}}@if(!Auth::guest()), {{Auth::user()->getFullname()}}@endif!
 @endsection
@@ -323,19 +327,18 @@
                     <div class="portlet-title">
                         <div class="caption">
                             <i class="icon-share font-blue"></i>
-                            <span class="caption-subject font-blue bold uppercase">UNSUBMITTED PROBLEMS</span>
+                            <span class="caption-subject font-blue bold uppercase">NOT SUBMITTED PROBLEMS</span>
                         </div>
                     </div>
                     <div class="portlet-body">
-										<?php $unsubmittedProblems = $statistic->getUnsubmittedProblems(); $countProbleme = 1; ?>
                                         <div class="scroller" style="height: 210px;" data-always-visible="1"
                                              data-rail-visible1="0" data-handle-color="#D7DCE2">
                                             <table class="table table-hover table-light">
                                                 <thead>
                                                 <tr class="uppercase">
                                                     <th width="10%"></th>
-                                                    <th width="80%"> Name</th>
-                                                    <th width="10%"> Ratio</th>
+                                                    <th> Name</th>
+                                                    <th> Ratio</th>
                                                 </tr>
                                                 </thead>
                                                 @foreach($unsubmittedProblems as $probleme)
@@ -350,7 +353,7 @@
 															</a>
 														</td>
                                                         <td>
-                                                            abc
+                                                            {{$probleme->courseName}}
                                                         </td>
                                                     </tr>
 												<?php $countProbleme = $countProbleme + 1; ?>
