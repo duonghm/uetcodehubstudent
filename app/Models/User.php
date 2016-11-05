@@ -71,12 +71,13 @@ class User extends Authenticatable
 
     public function totalScore()
     {
-        $tbl = $this
-            ->hasMany('App\Models\Submission', 'userId')
-            ->groupBy('courseId', 'problemId')
-            ->get(['submissions.submitId', \DB::raw('max(resultScore) as maxScore')])
-            ->sum('maxScore');
-        return $tbl;
+        $row = DB::select(
+            DB::raw(
+                'SELECT score FROM rankingtable
+				WHERE userId = '.$this->userId
+            )
+        );
+		return (sizeof($row) == 0) ? 0 : $row[0]->score;
     }
 
     protected $rankingTable;
