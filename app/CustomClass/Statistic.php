@@ -92,6 +92,41 @@ namespace App\CustomClass{
             );
         }
 		
+		public function getCourseSummary() {
+			return DB::select(
+                DB::raw(
+					'SELECT a.courseId, courseName, numOfDoneProblem, numOfProblem FROM
+						(SELECT COUNT(tab1.problemId) AS numOfProblem, tab1.courseId, courseName  FROM
+							(SELECT courseproblems.courseId, courseName, problemId, isAct
+							FROM courseproblems
+							LEFT JOIN (SELECT courseId, courseName, isActive as isAct
+								FROM courses
+								WHERE isActive = 1) AS coursesTab
+							ON courseproblems.courseId = coursesTab.courseId
+							WHERE courseproblems.isActive = 1 AND isAct IS NOT NULL
+							) AS tab1
+						LEFT JOIN
+							(SELECT courseId, userId
+							FROM courseusers
+							WHERE userId = '.Auth::user()->userId.'
+							) AS tab2
+						ON tab1.courseId = tab2.courseId
+						WHERE userId IS NOT NULL AND isAct=1
+						GROUP BY tab1.courseId) AS a
+					LEFT JOIN
+						(SELECT COUNT(a.problemId) AS numOfDoneProblem, a.courseId
+						FROM courseproblems AS a
+						RIGHT JOIN
+							(SELECT * FROM userproblemscore
+							WHERE userId = '.Auth::user()->userId.') AS b
+						ON a.problemId=b.problemId AND a.courseId=b.courseId
+						WHERE isActive=1
+						GROUP BY courseId) AS b
+					ON a.courseId = b.courseId'
+				)
+            );
+		}
+		
 		/*
 			Explain:
 			- Get all courses with isActive = 1
@@ -143,21 +178,21 @@ namespace App\CustomClass{
 					'SELECT a.problemId, a.courseId, problemCode, courseName FROM (
 						SELECT tab11.problemId, tab11.courseId, courseName
 						FROM (SELECT tab1.problemId, tab1.courseId, courseName, isAct  FROM
-										(SELECT courseproblems.courseId, courseName, problemId, isAct
-										FROM courseproblems
-										LEFT JOIN (SELECT courseId, courseName, isActive as isAct
-											FROM courses
-											WHERE isActive = 1) AS coursesTab
-										ON courseproblems.courseId = coursesTab.courseId
-										WHERE courseproblems.isActive = 1 AND isAct IS NOT NULL
-										) AS tab1
-									LEFT JOIN
-										(SELECT courseId, userId
-										FROM courseusers
-										WHERE userId = '.Auth::user()->userId.'
-										) AS tab2
-									ON tab1.courseId = tab2.courseId
-									WHERE userId IS NOT NULL
+								(SELECT courseproblems.courseId, courseName, problemId, isAct
+								FROM courseproblems
+								LEFT JOIN (SELECT courseId, courseName, isActive as isAct
+									FROM courses
+									WHERE isActive = 1) AS coursesTab
+								ON courseproblems.courseId = coursesTab.courseId
+								WHERE courseproblems.isActive = 1 AND isAct IS NOT NULL
+								) AS tab1
+							LEFT JOIN
+								(SELECT courseId, userId
+								FROM courseusers
+								WHERE userId = '.Auth::user()->userId.'
+								) AS tab2
+							ON tab1.courseId = tab2.courseId
+							WHERE userId IS NOT NULL
 							) AS tab11
 						LEFT JOIN (SELECT * FROM userproblemscore
 							WHERE userId = '.Auth::user()->userId.'

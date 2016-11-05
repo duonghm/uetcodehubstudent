@@ -63,17 +63,17 @@
 		//$unsubmitted = $statistic->getNumOfUnsubmit();
 		$unsubmittedProblems = $statistic->getUnsubmittedProblems(); $countProbleme = 1;
 		$unsubmitted = sizeof($unsubmittedProblems);
+		$coursesummary = $statistic->getCourseSummary();
 	}
 		?>
 	{{$greating}}@if(!Auth::guest()), {{Auth::user()->getFullname()}}@endif!
 @endsection
 
 @section('content')
-        <div class="row">
+    <div class="row">
     @if(!Auth::guest())
-
-		<a href="{{url('/all-courses')}}">
-            <div class="animate col-lg-4 col-md-4 col-sm-6 col-xs-12">
+		<a href="{{url('/my-courses')}}">
+            <div class="animate col-lg-3 col-md-3 col-sm-6 col-xs-12">
                 <div class="dashboard-stat blue" id="anim1">
                     <div class="visual">
                         <i class="fa fa-comments"></i>
@@ -82,15 +82,15 @@
                         <div class="number">
                             <span data-counter="" data-value="">{{Auth::user()->courses()->count()}}</span>
                         </div>
-                        <div class="desc"> Total courses</div>
+                        <div class="desc"> Your courses</div>
                     </div>
-                    <a class="more" href="{{url('/all-courses')}}"> View more
+                    <a class="more" href="{{url('/my-courses')}}"> View more
                         <i class="m-icon-swapright m-icon-white"></i>
                 </div>
             </div>
 		</a>
 		<a href="{{url('/user')}}">
-            <div class="animate col-lg-4 col-md-4 col-sm-6 col-xs-12">
+            <div class="animate col-lg-3 col-md-3 col-sm-6 col-xs-12">
                 <div class="dashboard-stat red" id="anim2">
                     <div class="visual">
                         <i class="fa fa-bar-chart-o"></i>
@@ -109,7 +109,7 @@
             </div>
 		</a>
 		<a href="{{url('/user')}}">
-            <div class="animate col-lg-4 col-md-4 col-sm-6 col-xs-12">
+            <div class="animate col-lg-3 col-md-3 col-sm-6 col-xs-12">
                 <div class="dashboard-stat green" id="anim3">
                     <div class="visual">
                         <i class="fa fa-shopping-cart"></i>
@@ -127,7 +127,7 @@
             </div>
 		</a>
 		<a href="{{url('/user')}}">
-            <div class="animate col-lg-4 col-md-4 col-sm-6 col-xs-12">
+            <div class="animate col-lg-3 col-md-3 col-sm-6 col-xs-12">
                 <div class="dashboard-stat purple" id="anim4">
                     <div class="visual">
                         <i class="fa fa-users"></i>
@@ -146,52 +146,6 @@
                 </div>
             </div>
 		</a>
-		<a href="{{url('/my-courses')}}">
-			<div class="animate col-lg-4 col-md-4 col-sm-6 col-xs-12">
-                <div class="dashboard-stat green-haze" id="anim5">
-                    <div class="visual">
-                        <i class="fa fa-flag-checkered"></i>
-                    </div>
-					@if($unsubmitted < 1)
-                    <div class="details">
-                        <div class="number">
-                            <span>Bravo!</span>
-                        </div>
-                        <div class="desc"> No unsubmitted problem</div>
-                    </div>
-                    <a class="more" href="{{url('/my-courses')}}"> Review now
-                        <i class="m-icon-swapright m-icon-white"></i>
-                    </a>
-					@else
-					<div class="details">
-                        <div class="number">
-                            <span data-counter="counterup" data-value="{{$unsubmitted}}">0</span>
-                        </div>
-                        <div class="desc"> Unsubmitted Problems</div>
-                    </div>
-                    <a class="more" href="{{url('/my-courses')}}"> Try it now!
-                        <i class="m-icon-swapright m-icon-white"></i>
-                    </a>
-					@endif
-                </div>
-            </div>
-		</a>
-			<!--div class="animate col-lg-4 col-md-4 col-sm-6 col-xs-12">
-                <div class="dashboard-stat yellow-casablanca" id="anim6">
-                    <div class="visual">
-                        <i class="fa fa-pencil-square"></i>
-                    </div>
-                    <div class="details">
-                        <div class="number">
-                            <span data-counter="counterup" data-value="1">0</span>
-                        </div>
-                        <div class="desc"> New exam</div>
-                    </div>
-                    <a class="more" href="javascript:;"> View more
-                        <i class="m-icon-swapright m-icon-white"></i>
-                    </a>
-                </div>
-            </div-->
 @else
             <div class="animate col-lg-4 col-md-4 col-sm-6 col-xs-12 margin-bottom-10">
                 <div class="dashboard-stat blue" id="anim1">
@@ -322,47 +276,86 @@
 @endif
 
 @if(!Auth::guest())
-			<div class="animate col-lg-8 col-md-8 col-sm-6 col-xs-12" id="anim5">
-                <div class="portlet light ">
-                    <div class="portlet-title">
-                        <div class="caption">
-                            <i class="icon-share font-blue"></i>
-                            <span class="caption-subject font-blue bold uppercase">NOT SUBMITTED PROBLEMS</span>
-                        </div>
-                    </div>
-                    <div class="portlet-body">
-                                        <div class="scroller" style="height: 210px;" data-always-visible="1"
-                                             data-rail-visible1="0" data-handle-color="#D7DCE2">
-                                            <table class="table table-hover table-light">
-                                                <thead>
-                                                <tr class="uppercase">
-                                                    <th width="10%"></th>
-                                                    <th> Name</th>
-                                                    <th> Ratio</th>
-                                                </tr>
-                                                </thead>
-                                                @foreach($unsubmittedProblems as $probleme)
-                                                    <tr>
-                                                        <td>
-                                                            <a href="javascript:;"
-                                                               class="primary-link">{{$countProbleme}}</a>
-                                                        </td>
-                                                        <td> 
-															<a href="{{url('/my-courses/'.$probleme->courseId.'/problems/'.$probleme->problemId)}}">
-																{{$probleme->problemCode}}
-															</a>
-														</td>
-                                                        <td>
-                                                            {{$probleme->courseName}}
-                                                        </td>
-                                                    </tr>
-												<?php $countProbleme = $countProbleme + 1; ?>
-                                                @endforeach
-                                            </table>
-                                        </div>
-                    </div>
-                </div>
-            </div>
+<div class="animate col-lg-6 col-md-6 col-sm-12 col-xs-12" id="anim5">
+	   <div class="portlet light ">
+		   <div class="portlet-title">
+			   <div class="caption">
+				   <i class="icon-share font-blue"></i>
+				   <span class="caption-subject font-blue bold uppercase">NOT SUBMITTED PROBLEMS</span>
+			   </div>
+		   </div>
+		   <div class="portlet-body">
+			   <div class="scroller" style="height: 210px;" data-always-visible="1"
+					data-rail-visible1="0" data-handle-color="#D7DCE2">
+				   <table class="table table-hover table-light">
+					   <thead>
+					   <tr class="uppercase">
+						   <th width="10%"></th>
+						   <th> Name</th>
+						   <th> Course</th>
+					   </tr>
+					   </thead>
+					   @foreach($unsubmittedProblems as $course)
+						   <tr>
+							   <td>
+								   <a href="javascript:;"
+									  class="primary-link">{{$countProbleme}}</a>
+							   </td>
+							   <td> 
+								<a href="{{url('/my-courses/'.$course->courseId.'/problems/'.$course->problemId)}}">
+									{{$course->problemCode}}
+								</a>
+							</td>
+							   <td>
+								   {{$course->courseName}}
+							   </td>
+						   </tr>
+					<?php $countProbleme = $countProbleme + 1; ?>
+					   @endforeach
+				   </table>
+			   </div>
+		   </div>
+	   </div>
+   </div>
+<div class="animate col-lg-6 col-md-6 col-sm-12 col-xs-12" id="anim5">
+	   <div class="portlet light ">
+		   <div class="portlet-title">
+			   <div class="caption">
+				   <i class="icon-share font-blue"></i>
+				   <span class="caption-subject font-blue bold uppercase">SUMMARY</span>
+			   </div>
+		   </div>
+		   <div class="portlet-body">
+			   <div class="scroller" style="height: 210px;" data-always-visible="1"
+					data-rail-visible1="0" data-handle-color="#D7DCE2">
+				   <table class="table table-hover table-light">
+					   <thead>
+					   <tr class="uppercase">
+						   <th> Course</th>
+						   <th> Remain</th>
+						   <th> Rate</th>
+					   </tr>
+					   </thead>
+					   @foreach($coursesummary as $course)
+						   <tr>
+							   <td>
+								   <a href="{{url('/my-courses/'.$course->courseId)}}">
+									{{$course->courseName}}
+								</a>
+							   </td>
+							<td> 
+								{{$course->numOfProblem - $course->numOfDoneProblem}} problems
+							</td>
+							   <td>
+								   {{round(($course->numOfDoneProblem*100/$course->numOfProblem), 2)}}%
+							   </td>
+						   </tr>
+					   @endforeach
+				   </table>
+			   </div>
+		   </div>
+	   </div>
+</div>
 @endif
 
         </div>
