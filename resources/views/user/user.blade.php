@@ -114,14 +114,14 @@
                             <div class="portlet-title tabbable-line">
                                 <div class="caption caption-md">
                                     <i class="icon-globe theme-font hide"></i>
-                                    <span class="caption-subject font-blue-madison bold uppercase">Submission & Ranking</span>
+                                    <span class="caption-subject font-blue-madison bold uppercase">Submission & Top 10 ranking</span>
                                 </div>
                                 <ul class="nav nav-tabs">
                                     <li>
                                         <a href="#tab_1_1" data-toggle="tab"> Submissions </a>
                                     </li>
                                     <li class="active">
-                                        <a href="#tab_1_2" data-toggle="tab"> Ranking </a>
+                                        <a href="#tab_1_2" data-toggle="tab"> Top 10 </a>
                                     </li>
                                 </ul>
                             </div>

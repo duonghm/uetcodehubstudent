@@ -44,6 +44,7 @@ namespace App\CustomClass{
 					FROM users AS tab1
 					RIGHT JOIN rankingtable AS tab2
 					ON tab1.userId = tab2.userId
+					WHERE rank <= 10
 					ORDER BY tab2.rank'
                 )
             );
