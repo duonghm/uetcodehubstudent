@@ -220,19 +220,20 @@
             <!-- DOC: Set data-auto-speed="200" to adjust the sub menu slide up/down speed -->
             <ul class="page-sidebar-menu  page-header-fixed page-sidebar-menu-hover-submenu " data-keep-expanded="false"
                 data-auto-scroll="true" data-slide-speed="200">
-                <li class="nav-item active open">
+                <li class="nav-item {{{ (Request::is('/') ? 'active open' : '') }}}">
                     <a href="{{url('/')}}" class="nav-link nav-toggle">
                         <i class="icon-home"></i>
-                        <span class="title">Dashboard</span>
-                        <span class="selected"></span>
-                        <span class="arrow open"></span>
+                        <span class="title">Dashboard </span>
+						<span class="arrow"></span>
+                        <span class="{{{ (Request::is('/') ? 'selected' : '') }}}"></span>
                     </a>
                 </li>
-                <li class="nav-item ">
+                <li class="nav-item {{{ ((Request::is('my-courses')||Request::is('all-courses')||Request::is('my-courses/*')) ? 'active open' : '') }}}">
                     <a href="{{url('/my-courses')}}" class="nav-link nav-toggle">
                         <i class="icon-notebook"></i>
                         <span class="title">Courses</span>
                         <span class="arrow"></span>
+						<span class="{{{ ((Request::is('my-courses')||Request::is('all-courses')) ? 'selected' : '') }}}"></span>
                     </a>
                     <ul class="sub-menu">
                         <li class="nav-item  ">
@@ -247,11 +248,12 @@
                         </li>
                     </ul>
                 </li>
-                <li class="nav-item  ">
+                <li class="nav-item {{{ ((Request::is('exams')||Request::is('exams/*')) ? 'active open' : '') }}}">
                     <a href="{{url('/exams')}}" class="nav-link nav-toggle">
                         <i class="icon-note"></i>
                         <span class="title">Exams</span>
                         <span class="arrow"></span>
+						<span class="{{{ ((Request::is('exams')||Request::is('exams/*')) ? 'selected' : '') }}}"></span>
                     </a>
                 </li>
             </ul>
