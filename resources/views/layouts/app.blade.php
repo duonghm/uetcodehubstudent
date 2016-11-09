@@ -233,7 +233,7 @@
                         <i class="icon-notebook"></i>
                         <span class="title">Courses</span>
                         <span class="arrow"></span>
-						<span class="{{{ ((Request::is('my-courses')||Request::is('all-courses')) ? 'selected' : '') }}}"></span>
+						<span class="{{{ ((Request::is('my-courses')||Request::is('all-courses')||Request::is('my-courses/*')) ? 'selected' : '') }}}"></span>
                     </a>
                     <ul class="sub-menu">
                         <li class="nav-item  ">

@@ -36,7 +36,7 @@
                                         window.location.reload();
                             }, 500);
                         } else if (data == 'ERR_AUTH') {
-                            $('#msg')[0].innerText = "Current password is not math with database";
+                            $('#msg')[0].innerText = "Current password is not match with database";
                             $('#msg')[0].style.color = '#f05f2a';
                         } else{
                             $('#msg')[0].innerText = "Database error";
