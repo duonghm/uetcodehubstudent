@@ -9,6 +9,8 @@
 @section('pageScript')
     <script src="{{URL::asset('assets/global/plugins/bootstrap-toastr/toastr.min.js')}}"
             type="text/javascript"></script>
+	<script src="{{URL::asset('js/codehub/editor_init.js')}}" type="text/javascript"></script>
+	<script src="{{URL::asset('js/codehub/editor_submit.js')}}" type="text/javascript"></script>
 @endsection
 
 @section('script')
@@ -30,21 +32,6 @@
         }
     </style>
     <script>
-        $('#language').change(function () {
-            var lang = $(this).val();
-            var editor = ace.edit("editor");
-            switch (lang) {
-                case "Java":
-                    editor.getSession().setMode("ace/mode/java");
-                    break;
-                case "C++":
-                    editor.getSession().setMode("ace/mode/c_cpp");
-                    break;
-                default:
-                    editor.getSession().setMode("ace/mode/c_cpp");
-            }
-        });
-		
 		var prevPage = getParameterByName("page");
 		console.log(prevPage);
 		$('#backbtn').click(function(){
@@ -76,190 +63,12 @@
 
     ?>
     <script>
-        String.prototype.replaceAll = function(search, replacement) {
-            var target = this;
-            return target.replace(new RegExp(search, 'g'), replacement);
-        };
-        var templateText = <?=$templateCode?>;
-        var INSERT_MARK = "//insert";
-
-        // ACE Editor setting
-        var editor = ace.edit("editor");
-        var textarea = $('#source_code');
-        editor.setTheme("ace/theme/chrome");
-        editor.getSession().setMode("ace/mode/c_cpp");
-        editor.getSession().on('change', function () {
-            textarea.val(editor.getSession().getValue());
-        });
-
-        if(templateText.indexOf(INSERT_MARK) !== 1){
-            editor.getSession().setValue(templateText.replaceAll(INSERT_MARK, ''));
-        }else{
-            editor.getSession().setValue(templateText);
-        }
-
-
-        textarea.val(editor.getSession().getValue());
-        document.getElementById("editor").style.width = "100%"
-        document.getElementById("editor").style.height = "400px";
-
-        // Readonly code setting-----------------------
-
-        var session = editor.getSession();
-        Range = ace.require("ace/range").Range;
-
-        var blockRanges = getReadonlyCode(templateText);
-        for (var i = 0; i < blockRanges.length; i++) {
-            var range = blockRanges[i];
-            var markerId = session.addMarker(range, "readonly-highlight");
-            range.start = session.doc.createAnchor(range.start);
-            range.end = session.doc.createAnchor(range.end);
-            range.end.$insertRight = true;
-        }
-
-        editor.keyBinding.addKeyboardHandler({
-            handleKeyboard: function (data, hash, keyString, keyCode, event) {
-                if ((keyCode <= 40 && keyCode >= 37)) return false;
-
-                if (intersects(blockRanges)) {
-                    return {command: "null", passEvent: false};
-                }
-            }
-        });
-
-        before(editor, 'onPaste', preventReadonly);
-        before(editor, 'onCut', preventReadonly);
-
-        function before(obj, method, wrapper) {
-            var orig = obj[method];
-            obj[method] = function () {
-                var args = Array.prototype.slice.call(arguments);
-                return wrapper.apply(this, function () {
-                    return orig.apply(obj, orig);
-                }, args);
-            }
-
-            return obj[method];
-        }
-
-        function intersects(blockRanges) {
-            for (var i = 0; i < blockRanges.length; i++) {
-                if (editor.getSelectionRange().intersects(blockRanges[i])) {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        function preventReadonly(next) {
-            if (intersects(blockRanges)) return;
-            next();
-        }
-
-        function getReadonlyCode(templateText){
-            var blocks = [];
-            if(templateText != ""){
-                var lines = templateText.split('\n');
-                for(var i=0; i<lines.length; i++){
-                    if(lines[i].indexOf(INSERT_MARK) == -1){
-                        blocks.push(new Range(i,0,i+1,0));
-                    }
-                }
-            }
-            return blocks;
-        }
+		setupPrepairEditor();
+        setupTemplateCode(<?=$templateCode?>);
+		setupSubmitProblem('{{url('/submitPostAjax')}}', {{$courseId}}, -1,
+											{{$problem->problemId}}, '{{$problem->problemCode}}');
+		setupSubmissionTable('{{url(Request::path().'/submissionTable')}}');
     </script>
-
-    <script type="text/javascript">
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-		
-		function reloadSubmissionTable() {
-			$('#result').load('{{url(Request::path().'/submissionTable')}}');
-		}
-
-        $(document).ready(function () {
-			var ajaxGetTimes = 0;
-			var blockSubmitBtn = false;
-            $('#mytabs').tabs();
-            $('#result').load('{{url(Request::path().'/submissionTable')}}');
-
-            function refreshSubmissionTable() {
-				ajaxGetTimes++;
-				if (ajaxGetTimes < 6) {
-					//console.log(ajaxGetTimes+'{{url(Request::path().'/submissionTable')}}');
-					$('#result').load('{{url(Request::path().'/submissionTable')}}');
-					setTimeout(refreshSubmissionTable, 5000);
-				}
-            }
-			
-			function getSubmissionTable() {
-				if (ajaxGetTimes == 0) {
-					refreshSubmissionTable();
-				} else {
-					ajaxGetTimes = 0;
-				}
-			}
-			
-			function unblockSubmitBtn() {
-				blockSubmitBtn = false;
-				$("#submit-button").html("SUBMIT");
-			}
-
-            $('#frmSubmit').submit(function () {
-				if (!blockSubmitBtn) {
-					blockSubmitBtn = true;
-					//setTimeout(unblockSubmitBtn, 5000);
-					$("#submit-button").html("<img height=\"14\" width=\"14\" src=\"{{URL::asset('assets/layouts/layout/img/loading_submit.gif')}}\" /> LOADING...");
-					
-					var _sourceCode = $('#source_code').val();
-					var _language = $('#language').val();
-					if (_sourceCode == "" || _sourceCode === undefined) {
-						unblockSubmitBtn();
-						toastr.warning("Cannot submit empty code", "Error");
-					} else {
-						$.ajax({
-							type: "POST",
-							url: "{{url('/submitPostAjax')}}",
-							timeout: 5000,
-							data: {
-								sourceCode: _sourceCode,
-								language: _language,
-								courseId: {{$courseId}},
-								problemId: {{$problem->problemId}},
-								problemCode: '{{$problem->problemCode}}'
-							},
-							success: function (data) {
-								unblockSubmitBtn();
-								console.log(data);//
-								if (data == 'OK') {
-									//alert('submit OK');
-									$('#mytabs').tabs("option", "active", 1);
-									getSubmissionTable();
-									toastr.success("Submission notifications", "Your submission is sent successfully");
-								} else {
-									//alert('something wrong');
-									getSubmissionTable();
-									toastr.error("Submission notifications", "Error to submit submission");
-								}
-		
-							},
-							error: function (xhr, ajaxOptions, thrownError) {
-								unblockSubmitBtn();
-								alert(xhr.status);
-								alert(ajaxOptions);
-								alert(thrownError);
-							}
-						});
-					}
-				}
-            });
-        });
-    </script>
-
     <script>
 		var sourceToCopy = "";
         function showSource(source) {
