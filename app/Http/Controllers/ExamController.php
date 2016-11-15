@@ -30,19 +30,24 @@ class ExamController extends Controller
     }
 
     public function startExam($examId){
-        $exam = Exam::find($examId);
 
-        if(!$exam->hasJoin(Auth::user()->userId)){
-            $user = Auth::user();
-            $user->exams()->attach($examId);
+
+        $exam = Exam::find($examId);
+        if($exam->isAvailable() || Auth::user()->role()->first()->roleName !== 'Student'){
+            if(!$exam->hasJoin(Auth::user()->userId)){
+                $user = Auth::user();
+                $user->exams()->attach($examId);
+            }
+
+            $q = strtotime($exam->joinTime(Auth::user()->userId));
+            //$now = strtotime ((new \DateTime('now', new \DateTimeZone('Asia/Ho_Chi_Minh')))->format('Y-m-d H:i:s'));
+            //$remain = $now - $q;
+
+            $problems = $exam->problems;
+            return view('exam.showExamDetail', compact('exam', 'problems', 'q'));
+        }else{
+            return Redirect::to(url('/exams'));
         }
-        
-        $q = strtotime($exam->joinTime(Auth::user()->userId));
-        //$now = strtotime ((new \DateTime('now', new \DateTimeZone('Asia/Ho_Chi_Minh')))->format('Y-m-d H:i:s'));
-        //$remain = $now - $q;
-        
-        $problems = $exam->problems;
-        return view('exam.showExamDetail', compact('exam', 'problems', 'q'));
     }
 
 

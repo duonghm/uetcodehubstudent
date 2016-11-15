@@ -9,6 +9,11 @@
 @section('pageScript')
     <script src="{{URL::asset('assets/global/plugins/bootstrap-toastr/toastr.min.js')}}"
             type="text/javascript"></script>
+    <script>
+        $('#hide-btn').click(function(){
+            $('#problemTitle').toggle(300);
+        })
+    </script>
 @endsection
 
 @section('script')
@@ -60,7 +65,7 @@
             return target.replace(new RegExp(search, 'g'), replacement);
         };
         var templateText = <?=$templateCode?>;
-        var READONLY_MARK = "// readonly";
+        var INSERT_MARK = "//insert";
 
         // ACE Editor setting
         var editor = ace.edit("editor");
@@ -71,8 +76,8 @@
             textarea.val(editor.getSession().getValue());
         });
 
-        if(templateText.indexOf(READONLY_MARK) !== 1){
-            editor.getSession().setValue(templateText.replaceAll(READONLY_MARK, ''));
+        if(templateText.indexOf(INSERT_MARK) !== 1){
+            editor.getSession().setValue(templateText.replaceAll(INSERT_MARK, ''));
         }else{
             editor.getSession().setValue(templateText);
         }
@@ -137,10 +142,12 @@
 
         function getReadonlyCode(templateText){
             var blocks = [];
-            var lines = templateText.split('\n');
-            for(var i=0; i<lines.length; i++){
-                if(lines[i].indexOf(READONLY_MARK) !== -1){
-                    blocks.push(new Range(i,0,i+1,0));
+            if(templateText != ""){
+                var lines = templateText.split('\n');
+                for(var i=0; i<lines.length; i++){
+                    if(lines[i].indexOf(INSERT_MARK) == -1){
+                        blocks.push(new Range(i,0,i+1,0));
+                    }
                 }
             }
             return blocks;
@@ -148,6 +155,14 @@
     </script>
 
     <script type="text/javascript">
+        const MAX_FETCH = 9;
+        var runningTime = 0;
+        function reloadSubmit(){
+            runningTime = 0;
+            $('#result').load('{{url(Request::path().'/submissionTable')}}');
+        }
+
+
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -158,27 +173,32 @@
             $('#mytabs').tabs();
             $('#result').load('{{url(Request::path().'/submissionTable')}}');
 
-
-
             $(function () {
                 function reloadTime() {
                     $('#remain-time').load('{{url(Request::path().'/countDown')}}')
                 }
                 function callAjax() {
-                    console.log('{{url(Request::path().'/submissionTable')}}');
-                    $('#result').load('{{url(Request::path().'/submissionTable')}}')
+                    if(runningTime < MAX_FETCH){
+                        console.log('{{url(Request::path().'/submissionTable')}}');
+                        $('#result').load('{{url(Request::path().'/submissionTable')}}');
+                        runningTime ++;
+                        console.log(runningTime);
+                    }
                 }
-                setInterval(callAjax, 5000);
-                setInterval(reloadTime,1000);
+                setInterval(callAjax, 10000);
+                setInterval(reloadTime,10000);
             });
 
             $('#frmSubmit').submit(function () {
+                if(runningTime >= MAX_FETCH){
+                    runningTime -= 5;
+                }
                 var _sourceCode = $('#source_code').val();
                 var _language = $('#language').val();
                 $.ajax({
                     type: "POST",
                     url: "{{url('/submitExam')}}",
-                    timeout: 5000,
+                    timeout: 20000,
                     data: {
                         sourceCode: _sourceCode,
                         language: _language,
@@ -235,116 +255,118 @@
             </div>
         </div>
     </div>
+    <div style="margin-top: -45px; margin-left:-20px; margin-right: -20px">
+        <div class="row">
+            <div class="col-md-12">
+                <div id="pl_pr" class="portlet light portlet-fit full-height-content full-height-content-scrollable ">
+                    <div class="portlet-title">
 
-    <div class="row">
-        <div class="col-md-3">
-            <div id="pl_pr" class="portlet light portlet-fit full-height-content full-height-content-scrollable ">
-                <div class="portlet-title">
-
-                    <div class="caption">
-                        <i class=" icon-layers font-green"></i>
-                        <span class="caption-subject font-green bold uppercase">
-                            Mô tả bài toán
-                        </span>
-                    </div>
-                </div>
-                <div class="portlet-body">
-                    <div class="box" id="problem-content" style="min-height: 415px;">
-                        <div style="background: #E0E0E0; margin-top: 10px; font-weight: bold">Problem statement</div>
-                        <div class="box-content" style="text-align: justify; font-family: monospace;">
-                            {!! $problem->content !!}
-                        </div>
-                        <div>
-                            <div style="background: #E0E0E0; margin-top: 10px; font-weight: bold">Input Description
-                            </div>
-                            <div>{!! $problem->inputDescription !!}</div>
-                        </div>
-                        <div>
-                            <div style="background: #E0E0E0; margin-top: 10px; font-weight: bold">Output Description
-                            </div>
-                            <div>{!! $problem->outputDescription !!}</div>
-                        </div>
-                        <div class="btn" style="position: absolute; bottom: 20px; text-align: right; width: 80%;">
-                            <a href="{{ URL('/exams/'.$examId.'/') }}"> Back </a>
+                        <div class="caption" style="width: 100%">
+                            <i class=" icon-layers font-green"></i>
+                            <span class="caption-subject font-green bold uppercase">
+                                {{$problem->problemCode}}
+                            </span>
+                            <a style="float:right;" class="btn btn-primary" href="{{ URL('/exams/'.$examId.'/') }}"> Back </a>
+                            <span id="hide-btn" style="float:right;" class="btn btn-primary">Hide</span>
                         </div>
                     </div>
+                    <div id="problemTitle" class="portlet-body">
+                        <div class="box" id="problem-content">
+                            <div style="background: #E0E0E0; margin-top: 10px; font-weight: bold">Problem statement</div>
+                            <div class="box-content" style="text-align: justify; font-family: monospace;">
+                                {!! $problem->content !!}
+                            </div>
+                            <div>
+                                <div style="background: #E0E0E0; margin-top: 10px; font-weight: bold">Input Description
+                                </div>
+                                <div>{!! $problem->inputDescription !!}</div>
+                            </div>
+                            <div>
+                                <div style="background: #E0E0E0; margin-top: 10px; font-weight: bold">Output Description
+                                </div>
+                                <div>{!! $problem->outputDescription !!}</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+
+
             </div>
+            </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="portlet light portlet-fit full-height-content full-height-content-scrollable ">
+                    <div class="portlet-body">
+                        <div style="float: right;font-family: inherit;font-weight: bold; color: cornflowerblue;">
+                            <span id="remain-time"></span>
+                        </div>
+                        <div class="box">
+                            <div id="mytabs" role="tabpanel">
+                                <ul class="nav nav-tabs" role="tablist">
+                                    <li role="presentation" class=""><a href="#editor-box" aria-controls="editor-box"
+                                                                        role="tab"
+                                                                        data-toggle="tab" aria-expanded="false">Mã nguồn</a>
+                                    </li>
+                                    <li role="presentation" class=""><a href="#result" aria-controls="submit" role="tab"
+                                                                        data-toggle="tab" aria-expanded="false">Kết quả</a>
+                                    </li>
+                                </ul>
+                                <div class="tab-content ">
+                                    <div role="tabpanel"
+                                         class="tab-pane {{Session::get('is_submitted') == true ? '' : 'active'}}"
+                                         id="editor-box">
 
+                                        <form id="frmSubmit" onsubmit="return false">
+                                            <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                            <div class="panel">
+                                                <div class="box">
+                                                    <div class="box-header">
 
-        </div>
-        <div class="col-md-9">
-            <div class="portlet light portlet-fit full-height-content full-height-content-scrollable ">
-                <div class="portlet-body">
-                    <div style="float: right;font-family: inherit;font-weight: bold; color: cornflowerblue;">
-                        <span id="remain-time"></span>
-                    </div>
-                    <div class="box">
-                        <div id="mytabs" role="tabpanel">
-                            <ul class="nav nav-tabs" role="tablist">
-                                <li role="presentation" class=""><a href="#editor-box" aria-controls="editor-box"
-                                                                    role="tab"
-                                                                    data-toggle="tab" aria-expanded="false">Mã nguồn</a>
-                                </li>
-                                <li role="presentation" class=""><a href="#result" aria-controls="submit" role="tab"
-                                                                    data-toggle="tab" aria-expanded="false">Kết quả</a>
-                                </li>
-                            </ul>
-                            <div class="tab-content ">
-                                <div role="tabpanel"
-                                     class="tab-pane {{Session::get('is_submitted') == true ? '' : 'active'}}"
-                                     id="editor-box">
-
-                                    <form id="frmSubmit" onsubmit="return false">
-                                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                        <div class="panel">
-                                            <div class="box">
-                                                <div class="box-header">
-
-                                                </div>
-                                                <div class="box-content">
-                                                    <div class="form-group" hidden>
-                                                        <textarea class="form-control" name="source_code"
-                                                                  id="source_code">
-
-                                                        </textarea>
                                                     </div>
-                                                    <div id="editor"></div>
-                                                </div>
-                                            </div>
-                                            <div class="form-group" style="margin-top: 5px">
-                                                <div class="pull-left" style="width:150px">
-                                                    <select class="form-control" name="language" id="language"
-                                                            onchange="changeLanguage()">
-                                                        <option value="Cpp">C++</option>
-                                                        <option value="C">C</option>
-                                                        {{--<option value="Java">Java</option>--}}
-                                                    </select>
-                                                </div>
-                                                <div>
-                                                    <button class="btn btn-primary pull-right" type="submit"
-                                                            id="submit-button">
-                                                        Submit
-                                                    </button>
-                                                </div>
-                                            </div>
+                                                    <div class="box-content">
+                                                        <div class="form-group" hidden>
+                                                            <textarea class="form-control" name="source_code"
+                                                                      id="source_code">
 
-                                        </div>
-                                    </form>
+                                                            </textarea>
+                                                        </div>
+                                                        <div id="editor"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group" style="margin-top: 5px">
+                                                    <div class="pull-left" style="width:150px">
+                                                        <select class="form-control" name="language" id="language"
+                                                                onchange="changeLanguage()">
+                                                            <option value="Cpp">C++</option>
+                                                            <option value="C">C</option>
+                                                            {{--<option value="Java">Java</option>--}}
+                                                        </select>
+                                                    </div>
+                                                    <div>
+                                                        <button class="btn btn-primary pull-right" type="submit"
+                                                                id="submit-button">
+                                                            Submit
+                                                        </button>
+                                                    </div>
+                                                </div>
 
-                                </div>
-                                <div role="tabpanel"
-                                     class="tab-pane {{Session::get('is_submitted') == true ? 'active' : ''}}"
-                                     id="result">
-                                    <div id="ajaxDemoContent">Demo content</div>
-                                    {{--@include(url('/'))--}}
+                                            </div>
+                                        </form>
+
+                                    </div>
+                                    <div role="tabpanel"
+                                         class="tab-pane {{Session::get('is_submitted') == true ? 'active' : ''}}"
+                                         id="result">
+                                        <div id="ajaxDemoContent">Demo content</div>
+                                        {{--@include(url('/'))--}}
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
+            </div>
         </div>
     </div>
 @endsection

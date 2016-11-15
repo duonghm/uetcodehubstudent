@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 class User extends Authenticatable
 {
+    public $timestamps = false;
     protected $primaryKey = 'userId';
     /**
      * The attributes that are mass assignable.
@@ -32,7 +33,7 @@ class User extends Authenticatable
     }
 
     public function role(){
-        return $this->hasOne('App\Models\Userrole', 'roleId');
+        return $this->belongsTo('App\Models\Userrole', 'roleId');
     }
 
     public function problems()

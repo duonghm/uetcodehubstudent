@@ -158,7 +158,9 @@ return [
         App\Providers\RouteServiceProvider::class,
         Artisaninweb\SoapWrapper\ServiceProvider::class,
         
-        Mpociot\LaravelTestFactoryHelper\TestFactoryHelperServiceProvider::class
+        Mpociot\LaravelTestFactoryHelper\TestFactoryHelperServiceProvider::class,
+
+        App\Auth\CustomAuthServiceProvider::class
     ],
 
     /*

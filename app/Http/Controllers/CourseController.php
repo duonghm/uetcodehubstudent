@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Session;
 
 class CourseController extends Controller
 {
+    const TEACHER_SEMESTER = "Teacher Semester";
+
     public function showCourses()
     {
         $courses = Auth::user()->courses->sortBy('courseName')->values();
@@ -23,6 +25,15 @@ class CourseController extends Controller
     public function showAllCourses()
     {
         $courses = Course::orderBy('courseName')->where('isActive',1)->get();
+
+        if(Auth::user()->role()->first()->roleName === 'Student'){
+            foreach ($courses as $key => $c){
+                if($c->semester()->first()->semesterName === 'Teacher Semester'){
+                    unset($courses[$key]);
+                }
+            }
+        }
+
         $joined_courses = Auth::user()->courses;
         foreach ($courses as $c) {
             $c->joined = false;

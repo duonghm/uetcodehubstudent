@@ -9,6 +9,11 @@
 @section('pageScript')
     <script src="{{URL::asset('assets/global/plugins/bootstrap-toastr/toastr.min.js')}}"
             type="text/javascript"></script>
+    <script>
+        $('#hide-btn').click(function(){
+            $('#problemTitle').toggle(300);
+        })
+    </script>
 @endsection
 
 @section('script')
@@ -229,113 +234,139 @@
             </div>
         </div>
     </div>
-
-    <div class="row">
-        <div class="col-md-3">
-            <div id="pl_pr" class="portlet light portlet-fit full-height-content full-height-content-scrollable ">
-                <div class="portlet-title">
-
-                    <div class="caption">
-                        <i class=" icon-layers font-green"></i>
-                        <span class="caption-subject font-green bold uppercase">
-                            Mô tả bài toán
-                        </span>
+    <div style="margin-top: -45px; margin-left:-20px; margin-right: -20px">
+        <div class="row">
+            <div class="col-md-12">
+                <div id="pl_pr" class="portlet light portlet-fit full-height-content full-height-content-scrollable ">
+                    <div class="portlet-title">
+                        <div class="caption" style="width: 100%">
+                            <i class=" icon-layers font-green"></i>
+                            <span class="caption-subject font-green bold uppercase">
+                                {{$problem->problemCode}}
+                            </span>
+                            <a style="float:right;" class="btn btn-primary" href="{{ URL('/my-courses/'.$courseId.'/problems') }}"> Back </a>
+                            <span id="hide-btn" style="float:right;" class="btn btn-primary">Hide</span>
+                        </div>
                     </div>
-                </div>
-                <div class="portlet-body">
-                    <div class="box" id="problem-content" style="min-height: 415px;">
-                        <div style="background: #E0E0E0; margin-top: 10px; font-weight: bold">Problem statement</div>
-                        <div class="box-content" style="text-align: justify; font-family: monospace;">
-                            {!! $problem->content !!}
-                        </div>
-                        <div>
-                            <div style="background: #E0E0E0; margin-top: 10px; font-weight: bold">Input Description
+                    <div id="problemTitle" class="portlet-body">
+                        <div class="box" id="problem-content">
+                            <div style="background: #E0E0E0; margin-top: 10px; font-weight: bold">Đề bài</div>
+                            <div class="box-content" style="text-align: justify; font-family: monospace;">
+                                {!! $problem->content !!}
                             </div>
-                            <div>{!! $problem->inputDescription !!}</div>
-                        </div>
-                        <div>
-                            <div style="background: #E0E0E0; margin-top: 10px; font-weight: bold">Output Description
+                            <div>
+                                <div style="width: 45%; float: left">
+                                    <div style="background: #E0E0E0; margin-top: 10px; font-weight: bold">Input
+                                    </div>
+                                    <div>{!! $problem->inputDescription !!}</div>
+                                </div>
+                                <div style="width: 45%; float: right">
+                                    <div style="background: #E0E0E0; margin-top: 10px; font-weight: bold">Output
+                                    </div>
+                                    <div>{!! $problem->outputDescription !!}</div>
+                                </div>
+                                <div style="clear: both;"></div>
                             </div>
-                            <div>{!! $problem->outputDescription !!}</div>
-                        </div>
-                        <div class="btn" style="position: absolute; bottom: 20px; text-align: right; width: 80%;">
-                            <a href="{{ URL('/my-courses/'.$courseId.'/problems') }}"> Back </a>
+
+
+
                         </div>
                     </div>
                 </div>
             </div>
-
-
         </div>
-        <div class="col-md-9">
-            <div class="portlet light portlet-fit full-height-content full-height-content-scrollable ">
-                <div class="portlet-body">
-                    <div class="box">
-                        <div id="mytabs" role="tabpanel">
-                            <ul class="nav nav-tabs" role="tablist">
-                                <li role="presentation" class=""><a href="#editor-box" aria-controls="editor-box"
-                                                                    role="tab"
-                                                                    data-toggle="tab" aria-expanded="false">Mã nguồn</a>
-                                </li>
-                                <li role="presentation" class=""><a href="#result" aria-controls="submit" role="tab"
-                                                                    data-toggle="tab" aria-expanded="false">Kết quả</a>
-                                </li>
-                            </ul>
-                            <div class="tab-content ">
-                                <div role="tabpanel"
-                                     class="tab-pane {{Session::get('is_submitted') == true ? '' : 'active'}}"
-                                     id="editor-box">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="portlet light portlet-fit full-height-content full-height-content-scrollable ">
+                    <div class="portlet-body">
+                        <div class="box">
+                            <div id="mytabs" role="tabpanel">
+                                <ul class="nav nav-tabs" role="tablist">
+                                    <li role="presentation" class=""><a href="#editor-box" aria-controls="editor-box"
+                                                                        role="tab"
+                                                                        data-toggle="tab" aria-expanded="false">Mã nguồn</a>
+                                    </li>
+                                    <li role="presentation" class=""><a href="#result" aria-controls="submit" role="tab"
+                                                                        data-toggle="tab" aria-expanded="false">Kết quả</a>
+                                    </li>
+                                    <li role="presentation" class=""><a href="#debai" aria-controls="submit" role="tab"
+                                                                        data-toggle="tab" aria-expanded="false">Đề bài</a>
+                                    </li>
+                                </ul>
+                                <div class="tab-content ">
+                                    <div role="tabpanel"
+                                         class="tab-pane {{Session::get('is_submitted') == true ? '' : 'active'}}"
+                                         id="editor-box">
 
-                                    <form id="frmSubmit" onsubmit="return false">
-                                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                        <div class="panel">
-                                            <div class="box">
-                                                <div class="box-header">
+                                        <form id="frmSubmit" onsubmit="return false">
+                                            <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                            <div class="panel">
+                                                <div class="box">
+                                                    <div class="box-header">
 
-                                                </div>
-                                                <div class="box-content">
-                                                    <div class="form-group" hidden>
-                                                        <textarea class="form-control" name="source_code"
-                                                                  id="source_code">
-
-                                                        </textarea>
                                                     </div>
-                                                    <div id="editor"></div>
-                                                </div>
-                                            </div>
-                                            <div class="form-group" style="margin-top: 5px">
-                                                <div class="pull-left" style="width:150px">
-                                                    <select class="form-control" name="language" id="language"
-                                                            onchange="changeLanguage()">
-                                                        <option value="Cpp">C++</option>
-                                                        <option value="C">C</option>
-                                                        <option value="Java">Java</option>
-                                                    </select>
-                                                </div>
-                                                <div>
-                                                    <button class="btn btn-primary pull-right" type="submit"
-                                                            id="submit-button">
-                                                        Submit
-                                                    </button>
-                                                </div>
-                                            </div>
+                                                    <div class="box-content">
+                                                        <div class="form-group" hidden>
+                                                            <textarea class="form-control" name="source_code"
+                                                                      id="source_code">
 
+                                                            </textarea>
+                                                        </div>
+                                                        <div id="editor"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group" style="margin-top: 5px">
+                                                    <div class="pull-left" style="width:150px">
+                                                        <select class="form-control" name="language" id="language"
+                                                                onchange="changeLanguage()">
+                                                            <option value="Cpp">C++</option>
+                                                            <option value="C">C</option>
+                                                            <option value="Java">Java</option>
+                                                        </select>
+                                                    </div>
+                                                    <div>
+                                                        <button class="btn btn-primary pull-right" type="submit"
+                                                                id="submit-button">
+                                                            Submit
+                                                        </button>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </form>
+
+                                    </div>
+                                    <div role="tabpanel"
+                                         class="tab-pane {{Session::get('is_submitted') == true ? 'active' : ''}}"
+                                         id="result">
+                                        <div id="ajaxDemoContent">Demo content</div>
+                                        {{--@include(url('/'))--}}
+                                    </div>
+                                    <div role="tabpanel" id="debai">
+                                        <div class="box-content" style="text-align: justify; font-family: monospace;">
+                                            {!! $problem->content !!}
                                         </div>
-                                    </form>
-
-                                </div>
-                                <div role="tabpanel"
-                                     class="tab-pane {{Session::get('is_submitted') == true ? 'active' : ''}}"
-                                     id="result">
-                                    <div id="ajaxDemoContent">Demo content</div>
-                                    {{--@include(url('/'))--}}
+                                        <div>
+                                            <div style="width: 45%; float: left">
+                                                <div style="background: #E0E0E0; margin-top: 10px; font-weight: bold">Input
+                                                </div>
+                                                <div>{!! $problem->inputDescription !!}</div>
+                                            </div>
+                                            <div style="width: 45%; float: right">
+                                                <div style="background: #E0E0E0; margin-top: 10px; font-weight: bold">Output
+                                                </div>
+                                                <div>{!! $problem->outputDescription !!}</div>
+                                            </div>
+                                            <div style="clear: both;"></div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
+            </div>
         </div>
     </div>
 @endsection

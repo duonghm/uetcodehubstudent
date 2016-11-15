@@ -33,10 +33,16 @@ class Exam extends Model
             return false;
         }*/
 //        $now = new \DateTime('now', new \DateTimeZone('Asia/Ho_Chi_Minh'));
-        $now = new \DateTime('now');
-        $from = new \DateTime($this->availableFrom);
-        $to = new \DateTime($this->availableTo);
-        return $now >= $from && $now <= $to;
+        //$now = new \DateTime('now');
+        $now = date("Y-m-d H:i:s", strtotime('+7 hours'));
+        $now = strtotime ($now);
+        $from = strtotime($this->availableFrom);
+        $to = strtotime($this->availableTo);
+        //$from = new \DateTime($this->availableFrom);
+        //$to = new \DateTime($this->availableTo);
+
+        return ($now >= $from) && ($now <= $to);
+        //return $from >= $to;
     }
 
     public function hasJoin($userId)
