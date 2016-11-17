@@ -11,6 +11,15 @@
             type="text/javascript"></script>
 	<script src="{{URL::asset('js/codehub/editor_init.js')}}" type="text/javascript"></script>
 	<script src="{{URL::asset('js/codehub/editor_submit.js')}}" type="text/javascript"></script>
+	<script>
+		var hide=false;
+        $('#hide-btn').click(function(){
+            $('#problemTitle').toggle(300);
+			hide = !hide;
+			if (hide) $('#hide-btn').html("<b><i class=\"fa fa-angle-down\"></i> Show</b>");
+			else $('#hide-btn').html("<b><i class=\"fa fa-angle-up\"></i> Hide</b>");
+        })
+    </script>
 @endsection
 
 @section('script')
@@ -145,7 +154,7 @@
     </div>
 
     <div class="row">
-        <div class="col-md-3">
+        <div class="col-md-12">
             <div id="pl_pr" class="portlet light">
                 <div class="portlet-title">
 
@@ -157,29 +166,35 @@
                         </span>
                     </div>
                 </div>
-                <div class="portlet-body">
+                <div id="problemTitle" class="portlet-body">
                     <div class="box" id="problem-content" style="min-height: 10px;">
                         <div style="background: #E0E0E0; margin-top: 10px; font-weight: bold">Problem statement</div>
                         <div class="box-content" style="text-align: justify; font-family: monospace;">
                             {!! $problem->content !!}
                         </div>
                         <div>
-                            <div style="background: #E0E0E0; margin-top: 10px; font-weight: bold">Input Description
+                            <div style="width: 45%; float: left">
+                                <div style="background: #E0E0E0; margin-top: 10px; font-weight: bold">Input
+                                </div>
+                                <div>{!! $problem->inputDescription !!}</div>
                             </div>
-                            <div>{!! $problem->inputDescription !!}</div>
-                        </div>
-                        <div>
-                            <div style="background: #E0E0E0; margin-top: 10px; font-weight: bold">Output Description
+                            <div style="width: 45%; float: right">
+                                <div style="background: #E0E0E0; margin-top: 10px; font-weight: bold">Output
+                                </div>
+                                <div>{!! $problem->outputDescription !!}</div>
                             </div>
-                            <div>{!! $problem->outputDescription !!}</div>
+                            <div style="clear: both;"></div>
                         </div>
                     </div>
                 </div>
+				<center>
+					<span id="hide-btn" style="background-color: #eee;" class="btn"><b><i class="fa fa-angle-up"></i> Hide</b></span>
+				</center>
             </div>
 
 
         </div>
-        <div class="col-md-9">
+        <div class="col-md-12">
             <div class="portlet light">
                 <div class="portlet-body">
                     <div class="box">
@@ -191,6 +206,9 @@
                                 </li>
                                 <li role="presentation" class=""><a href="#result" aria-controls="submit" role="tab"
                                                                     data-toggle="tab" aria-expanded="false">Kết quả</a>
+                                </li>
+								<li role="presentation" class=""><a href="#debai" aria-controls="submit" role="tab"
+                                                                    data-toggle="tab" aria-expanded="false">Đề bài</a>
                                 </li>
                             </ul>
                             <div class="tab-content ">
@@ -245,6 +263,24 @@
 									 id="result">
                                     <div id="ajaxDemoContent">Demo content</div>
                                     {{--@include(url('/'))--}}
+                                </div>
+								<div role="tabpanel" id="debai">
+                                    <div class="box-content" style="text-align: justify; font-family: monospace;">
+                                        {!! $problem->content !!}
+                                    </div>
+                                    <div>
+                                        <div style="width: 45%; float: left">
+                                            <div style="background: #E0E0E0; margin-top: 10px; font-weight: bold">Input
+                                            </div>
+                                            <div>{!! $problem->inputDescription !!}</div>
+                                        </div>
+                                        <div style="width: 45%; float: right">
+                                            <div style="background: #E0E0E0; margin-top: 10px; font-weight: bold">Output
+                                            </div>
+                                            <div>{!! $problem->outputDescription !!}</div>
+                                        </div>
+                                        <div style="clear: both;"></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
