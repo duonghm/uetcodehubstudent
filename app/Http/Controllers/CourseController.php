@@ -63,6 +63,7 @@ class CourseController extends Controller
 
     public function showProblemDetail($courseId, $problemId)
     {
+		$isExam = false;
         $courses = Auth::user()->courses->find($courseId);
 		if (sizeof($courses) > 0) {
 			$problems = $courses->problems;
@@ -77,6 +78,6 @@ class CourseController extends Controller
             );
 		$courseName = $row[0]->courseName;
         //$submissions = Auth::user()->submissions($courseId, $problemId);
-        return view('course.showProblemDetail', compact('courseId', 'problem', 'courseName'));
+        return view('problemDetails.showProblemDetail', compact('isExam', 'courseId', 'problem', 'courseName'));
     }
 }

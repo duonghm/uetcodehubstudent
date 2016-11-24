@@ -65,6 +65,7 @@ class ExamController extends Controller
 
     public function showProblemDetail($examId, $problemId)
     {
+		$isExam = true;
         $exam = Exam::find($examId);
         $problems = $exam->problems;
         $problem = $problems->find($problemId);
@@ -77,7 +78,7 @@ class ExamController extends Controller
         $time = $now - $joinTime;
         $remainTime = $exam->duration * 60 - $time;
 		
-        return view('exam.showProblemDetail', compact('examId', 'problem', 'submissions', 'remainTime'));
+        return view('problemDetails.showProblemDetail', compact('isExam', 'examId', 'problem', 'submissions', 'remainTime'));
     }
 
     /*public function countDown($examId){
