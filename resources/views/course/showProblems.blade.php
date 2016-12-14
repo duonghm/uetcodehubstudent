@@ -134,19 +134,20 @@
                                     $startIndex = ($problems->currentPage()-1) * $problems->perPage();
                                 @endphp
                                 <td data-title="STT">
-									<a href="{{url(Request::path().'/'.$p->problemId)}}">Bài {{$problems->total() - $startIndex - $index}}</a>
+									<a href="{{url(Request::path().'/'.$p->problemId)}}"><b>Bài {{$problems->total() - $startIndex - $index}}</b></a>
 								</td>
 									{{--<td width="300px">{{$p->tagValues}}</td>--}}
 									{{--<td>{{$p->pivot->hardLevel}}</td>--}}
-                                <td data-title="Mã bài">{{$p->problemCode}}</td>
-                                <td data-title="Điểm tối đa">{{$p->defaultScore}}</td>
-                                <td data-title="Đã nộp">{{$submitted}}</td>
+                                <td data-title="Mã bài"><b>{{$p->problemCode}}</b></td>
+                                <td data-title="Điểm tối đa"><b>{{$p->defaultScore}}</b></td>
+                                <td data-title="Đã nộp"><b>{{$submitted}}</b></td>
                                 @php
                                     $problemScore = $p->getScoreOfUser($course->courseId);
                                 @endphp
                                 <td data-title="Đã hoàn thành">
-                                    {{$finished}}
+                                    <b>{{$finished}}</b>
                                 </td>
+								
                                 <td data-title="Điểm hiện tại">
                                     <button type="button"
 										onclick="document.location = '{{url(Request::path().'/'.$p->problemId)}}?page={{$problems->currentPage()}}';"
@@ -159,6 +160,22 @@
 									@endif
                                 </td>
                             </tr>
+							<tr>
+								<td></td>
+								<td data-title="Tóm tắt" colspan="5">
+									@php
+										$summary = strip_tags($p->content);
+										$summary = str_replace(array("\r\n", "\n", "\r"), ' ', $summary);
+									@endphp
+									<script>
+										document.write(decodeURI("{{ $summary }}").substr(0,200));
+									</script>
+									@if(strlen($summary) >= 200)
+										...
+									@endif
+									<br/><br/>
+								</td>
+							</tr>
                         @endforeach
                         </tbody>
                     </table>
