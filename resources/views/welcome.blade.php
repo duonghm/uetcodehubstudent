@@ -65,7 +65,15 @@
 		$unsubmitted = sizeof($unsubmittedProblems);
 		$coursesummary = $statistic->getCourseSummary();
 	}
-		?>
+	
+	$coursetable = $statistic->getCourseTable();
+	$totalExercises = 0;
+	$totalCourses = 0;
+	foreach($coursetable as $course) {
+		$totalCourses++;
+        $totalExercises += $course->numOfProblems;
+	}
+	?>
 	{{$greating}}@if(!Auth::guest()), {{Auth::user()->getFullname()}}@endif!
 @endsection
 
@@ -153,7 +161,7 @@
                         <i class="fa fa-briefcase fa-icon-medium"></i>
                     </div>
                     <div class="details">
-                        <div class="number"> {{$statistic->getNumberOfExercise()}}</div>
+                        <div class="number"> {{$totalExercises}}</div>
                         <div class="desc"> Total Exercises</div>
                     </div>
                     <a class="more" href="javascript:;">
@@ -181,7 +189,7 @@
                         <i class="fa fa-group fa-icon-medium"></i>
                     </div>
                     <div class="details">
-                        <div class="number"> {{$statistic->getNumberOfCourse()}}</div>
+                        <div class="number"> {{$totalCourses}}</div>
                         <div class="desc"> Total Courses</div>
                     </div>
                     <a class="more" href="javascript:;">
@@ -252,7 +260,6 @@
                         </div>
                     </div>
                     <div class="portlet-body">
-						<?php $coursetable = $statistic->getCourseTable() ?>
                         <div class="scroller" style="height: 210px;" data-always-visible="1"
                              data-rail-visible1="0" data-handle-color="#D7DCE2">
                             <table class="table table-hover table-light">
