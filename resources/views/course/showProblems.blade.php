@@ -151,11 +151,11 @@
                                     <button type="button"
 										onclick="document.location = '{{url(Request::path().'/'.$p->problemId)}}?page={{$problems->currentPage()}}';"
 									@if($problemscore == null)
-										class="btn btn-primary" > <b>SOLVE PROBLEM</b> </button>
+										class="btn btn-primary" > <b>LÀM BÀI NÀY</b> </button>
 									@elseif($problemscore == $p->defaultScore)
-										class="btn btn-success" > <i class="fa fa-check"></i> <b>REVIEW</b> ({{$problemscore}})</button>
+										class="btn btn-success" > <i class="fa fa-check"></i> <b>HOÀN THÀNH</b></button>
 									@else
-										class="btn btn-warning" style="color: #000;"> <b>TRY AGAIN</b> ({{$problemscore}}) </button>
+										class="btn btn-warning" style="color: #000;"> <b>THỬ LẠI</b> ({{$problemscore}}) </button>
 									@endif
                                 </td>
                             </tr>

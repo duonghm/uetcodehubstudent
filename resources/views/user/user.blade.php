@@ -25,15 +25,15 @@
 						<div class="row list-separated profile-stat">
 							<div class="col-md-4 col-sm-4 col-xs-6">
 								<div class="uppercase profile-stat-title"> {{Auth::user()->courses()->count()}}</div>
-								<div class="uppercase profile-stat-text"> Courses</div>
+								<div class="uppercase profile-stat-text"> Khóa học</div>
 							</div>
 							<div class="col-md-4 col-sm-4 col-xs-6">
 								<div class="uppercase profile-stat-title"> {{Auth::user()->totalScore()}}</div>
-								<div class="uppercase profile-stat-text"> Score</div>
+								<div class="uppercase profile-stat-text"> Điểm</div>
 							</div>
 							<div class="col-md-4 col-sm-4 col-xs-6">
 								<div class="uppercase profile-stat-title"> {{Auth::user()->currentRanking()}}</div>
-								<div class="uppercase profile-stat-text"> Ranking</div>
+								<div class="uppercase profile-stat-text"> Xếp hạng</div>
 							</div>
 						</div>
 	
@@ -46,7 +46,7 @@
                     <div class="portlet-title">
                         <div class="caption caption-md">
                             <i class="icon-bar-chart theme-font hide"></i>
-                            <span class="caption-subject font-blue-madison bold uppercase">Joined Courses</span>
+                            <span class="caption-subject font-blue-madison bold uppercase">Khóa học đang tham gia</span>
                         </div>
                     </div>
                     <div class="portlet-body">
@@ -82,8 +82,8 @@
                                 <table class="table table-hover table-light">
                                     <thead>
                                     <tr class="uppercase">
-                                        <th> Course</th>
-                                        <th> Semester</th>
+                                        <th> Tên khóa học</th>
+                                        <th> Học kỳ</th>
                                         <!--th> Remain</th>
                                         <th> Rate</th-->
                                     </tr>
@@ -114,11 +114,11 @@
                             <div class="portlet-title tabbable-line">
                                 <div class="caption caption-md">
                                     <i class="icon-globe theme-font hide"></i>
-                                    <span class="caption-subject font-blue-madison bold uppercase">Submission & Top 10 ranking</span>
+                                    <span class="caption-subject font-blue-madison bold uppercase">Tổng hợp kết quả</span>
                                 </div>
                                 <ul class="nav nav-tabs">
                                     <li>
-                                        <a href="#tab_1_1" data-toggle="tab"> Submissions </a>
+                                        <a href="#tab_1_1" data-toggle="tab"> Các bài đã nộp </a>
                                     </li>
                                     <li class="active">
                                         <a href="#tab_1_2" data-toggle="tab"> Top 10 </a>
@@ -180,9 +180,9 @@
                                             <table class="table table-hover table-light">
                                                 <thead>
                                                 <tr class="uppercase">
-                                                    <th width="20%"> Ranking</th>
-                                                    <th width="50%"> Name</th>
-                                                    <th width="30%"> Score</th>
+                                                    <th width="20%"> Xếp hạng</th>
+                                                    <th width="50%"> Tên / MSSV</th>
+                                                    <th width="30%"> Điểm</th>
                                                 </tr>
                                                 </thead>
 												<tbody>

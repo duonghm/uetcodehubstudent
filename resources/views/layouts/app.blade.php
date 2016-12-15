@@ -108,47 +108,6 @@
         <!-- BEGIN RESPONSIVE MENU TOGGLER -->
         <a href="javascript:;" class="menu-toggler responsive-toggler" data-toggle="collapse"
            data-target=".navbar-collapse"> </a>
-        <!-- END RESPONSIVE MENU TOGGLER -->
-        <!-- BEGIN PAGE ACTIONS -->
-        <!-- DOC: Remove "hide" class to enable the page header actions -->
-        <!--div class="page-actions">
-            <div class="btn-group">
-                <button type="button" class="btn btn-circle btn-outline red dropdown-toggle" data-toggle="dropdown">
-                    <i class="fa fa-plus"></i>&nbsp;
-                    <span class="hidden-sm hidden-xs">New&nbsp;</span>&nbsp;
-                    <i class="fa fa-angle-down"></i>
-                </button>
-                <ul class="dropdown-menu" role="menu">
-                    <li>
-                        <a href="javascript:;">
-                            <i class="icon-docs"></i> New Post </a>
-                    </li>
-                    <li>
-                        <a href="javascript:;">
-                            <i class="icon-tag"></i> New Comment </a>
-                    </li>
-                    <li>
-                        <a href="javascript:;">
-                            <i class="icon-share"></i> Share </a>
-                    </li>
-                    <li class="divider"></li>
-                    <li>
-                        <a href="javascript:;">
-                            <i class="icon-flag"></i> Comments
-                            <span class="badge badge-success">4</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="javascript:;">
-                            <i class="icon-users"></i> Feedbacks
-                            <span class="badge badge-danger">2</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div-->
-        <!-- END PAGE ACTIONS -->
-        <!-- BEGIN PAGE TOP -->
         <div class="page-top">
             <!-- BEGIN TOP NAVIGATION MENU -->
             <div class="top-menu">
@@ -158,7 +117,7 @@
                     @if(Auth::guest())
                         <li style="margin-top: 7px">
                             <a href="{{url('/login')}}">
-                                <i class="icon-login"></i><span>Login</span>
+                                <i class="icon-login"></i><span>Đăng nhập</span>
                             </a>
                         </li>
                     @else
@@ -174,17 +133,17 @@
                             <ul class="dropdown-menu dropdown-menu-default">
                                 <li>
                                     <a href="{{url('/user')}}">
-                                        <i class="icon-user"></i> My Profile </a>
+                                        <i class="icon-user"></i> Hồ sơ cá nhân </a>
                                 </li>
                                 <li>
                                     <a data-toggle="modal" data-target="#changePasswordModal">
-                                        <i class="icon-lock"></i> Change Password
+                                        <i class="icon-lock"></i> Đổi mật khẩu
                                     </a>
                                 </li>
                                 <li class="divider"></li>
                                 <li>
                                     <a href="{{url('logout')}}">
-                                        <i class="icon-key"></i> Log Out </a>
+                                        <i class="icon-key"></i> Đăng xuất </a>
                                 </li>
                             </ul>
                         </li>
@@ -198,32 +157,16 @@
     </div>
     <!-- END HEADER INNER -->
 </div>
-<!-- END HEADER -->
-<!-- BEGIN HEADER & CONTENT DIVIDER -->
 <div class="clearfix"></div>
-<!-- END HEADER & CONTENT DIVIDER -->
-<!-- BEGIN CONTAINER -->
 <div class="page-container">
-    <!-- BEGIN SIDEBAR -->
-
     <div class="page-sidebar-wrapper">
-        <!-- END SIDEBAR -->
-        <!-- DOC: Set data-auto-scroll="false" to disable the sidebar from auto scrolling/focusing -->
-        <!-- DOC: Change data-auto-speed="200" to adjust the sub menu slide up/down speed -->
         <div class="page-sidebar navbar-collapse collapse">
-            <!-- BEGIN SIDEBAR MENU -->
-            <!-- DOC: Apply "page-sidebar-menu-light" class right after "page-sidebar-menu" to enable light sidebar menu style(without borders) -->
-            <!-- DOC: Apply "page-sidebar-menu-hover-submenu" class right after "page-sidebar-menu" to enable hoverable(hover vs accordion) sub menu mode -->
-            <!-- DOC: Apply "page-sidebar-menu-closed" class right after "page-sidebar-menu" to collapse("page-sidebar-closed" class must be applied to the body element) the sidebar sub menu mode -->
-            <!-- DOC: Set data-auto-scroll="false" to disable the sidebar from auto scrolling/focusing -->
-            <!-- DOC: Set data-keep-expand="true" to keep the submenues expanded -->
-            <!-- DOC: Set data-auto-speed="200" to adjust the sub menu slide up/down speed -->
             <ul class="page-sidebar-menu  page-header-fixed page-sidebar-menu-hover-submenu " data-keep-expanded="false"
                 data-auto-scroll="true" data-slide-speed="200">
                 <li class="nav-item {{{ (Request::is('/') ? 'active open' : '') }}}">
                     <a href="{{url('/')}}" class="nav-link nav-toggle">
                         <i class="icon-home"></i>
-                        <span class="title">Dashboard </span>
+                        <span class="title">Trang chủ</span>
 						<span class="arrow"></span>
                         <span class="{{{ (Request::is('/') ? 'selected' : '') }}}"></span>
                     </a>
@@ -231,19 +174,19 @@
                 <li class="nav-item {{{ ((Request::is('my-courses')||Request::is('all-courses')||Request::is('my-courses/*')) ? 'active open' : '') }}}">
                     <a href="{{url('/my-courses')}}" class="nav-link nav-toggle">
                         <i class="icon-notebook"></i>
-                        <span class="title">Courses</span>
+                        <span class="title">Khóa học</span>
                         <span class="arrow"></span>
 						<span class="{{{ ((Request::is('my-courses')||Request::is('all-courses')||Request::is('my-courses/*')) ? 'selected' : '') }}}"></span>
                     </a>
                     <ul class="sub-menu">
                         <li class="nav-item  ">
                             <a href="{{url('/all-courses')}}" class="nav-link ">
-                                <span class="title">All courses</span>
+                                <span class="title">Đăng ký thêm</span>
                             </a>
                         </li>
                         <li class="nav-item  ">
                             <a href="{{url('/my-courses')}}" class="nav-link ">
-                                <span class="title">My course</span>
+                                <span class="title">Đang tham gia</span>
                             </a>
                         </li>
                     </ul>
@@ -251,7 +194,7 @@
                 <li class="nav-item {{{ ((Request::is('exams')||Request::is('exams/*')) ? 'active open' : '') }}}">
                     <a href="{{url('/exams')}}" class="nav-link nav-toggle">
                         <i class="icon-note"></i>
-                        <span class="title">Exams</span>
+                        <span class="title">Bài kiểm tra</span>
                         <span class="arrow"></span>
 						<span class="{{{ ((Request::is('exams')||Request::is('exams/*')) ? 'selected' : '') }}}"></span>
                     </a>

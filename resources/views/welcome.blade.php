@@ -47,18 +47,6 @@
 
 @section('pageTitle')
     <?php 
-	date_default_timezone_set("Asia/Bangkok");
-	$hour = intval(date('H'));
-		if ($hour > 22) {
-			$greating = "Good night";
-		} else if ($hour > 12) {
-			$greating = "Good afternoon";
-		} else if ($hour > 4) {
-			$greating = "Good morning";
-		} else {
-			$greating = "Good night";
-		} 
-		
 	if(!Auth::guest()) {
 		//$unsubmitted = $statistic->getNumOfUnsubmit();
 		$unsubmittedProblems = $statistic->getUnsubmittedProblems(); $countProbleme = 1;
@@ -74,7 +62,7 @@
         $totalExercises += $course->numOfProblems;
 	}
 	?>
-	{{$greating}}@if(!Auth::guest()), {{Auth::user()->getFullname()}}@endif!
+	Xin chào @if(!Auth::guest()){{Auth::user()->getFullname()}}@endif!
 @endsection
 
 @section('content')
@@ -90,9 +78,9 @@
                         <div class="number">
                             <span data-counter="" data-value="">{{Auth::user()->courses()->count()}}</span>
                         </div>
-                        <div class="desc"> Your courses</div>
+                        <div class="desc">Khóa học của bạn</div>
                     </div>
-                    <a class="more" href="{{url('/my-courses')}}"> View more
+                    <a class="more" href="{{url('/my-courses')}}"> Xem thêm
                         <i class="m-icon-swapright m-icon-white"></i>
                 </div>
             </div>
@@ -108,9 +96,9 @@
                             <span data-counter="counterup"
                                   data-value="{{Auth::user()->allSubmissions()->count()}}">0</span>
                         </div>
-                        <div class="desc"> Total Submissions</div>
+                        <div class="desc"> Số lần đã nộp</div>
                     </div>
-                    <a class="more" href="{{url('/user')}}"> View more
+                    <a class="more" href="{{url('/user')}}"> Xem thêm
                         <i class="m-icon-swapright m-icon-white"></i>
                     </a>
                 </div>
@@ -126,9 +114,9 @@
                         <div class="number">
                             <span data-counter="counterup" data-value="{{Auth::user()->totalScore()}}">0</span>
                         </div>
-                        <div class="desc"> Total Score</div>
+                        <div class="desc"> Tổng điểm</div>
                     </div>
-                    <a class="more" href=""> View more
+                    <a class="more" href=""> Xem thêm
                         <i class="m-icon-swapright m-icon-white"></i>
                     </a>
                 </div>
@@ -146,9 +134,9 @@
                             <span data-counter="counterup" 
 								data-value="{{Auth::user()->currentRanking()}}">0</span>
                         </div>
-                        <div class="desc"> Ranking</div>
+                        <div class="desc"> Xếp hạng</div>
                     </div>
-                    <a class="more" href="{{url('/user')}}"> View more
+                    <a class="more" href="{{url('/user')}}"> Xem thêm
                         <i class="m-icon-swapright m-icon-white"></i>
                     </a>
                 </div>
@@ -162,7 +150,7 @@
                     </div>
                     <div class="details">
                         <div class="number"> {{$totalExercises}}</div>
-                        <div class="desc"> Total Exercises</div>
+                        <div class="desc"> Tổng số bài</div>
                     </div>
                     <a class="more" href="javascript:;">
                         <i class="m-icon-swapright m-icon-white"></i>
@@ -176,7 +164,7 @@
                     </div>
                     <div class="details">
                         <div class="number"> {{$statistic->getNumberOfMember()}}</div>
-                        <div class="desc"> Total Members</div>
+                        <div class="desc"> Số thành viên</div>
                     </div>
                     <a class="more" href="javascript:;">
                         <i class="m-icon-swapright m-icon-white"></i>
@@ -190,7 +178,7 @@
                     </div>
                     <div class="details">
                         <div class="number"> {{$totalCourses}}</div>
-                        <div class="desc"> Total Courses</div>
+                        <div class="desc"> Số khóa học</div>
                     </div>
                     <a class="more" href="javascript:;">
                         <i class="m-icon-swapright m-icon-white"></i>
@@ -206,7 +194,7 @@
                     <div class="portlet-title">
                         <div class="caption">
                             <i class="icon-user font-blue"></i>
-                            <span class="caption-subject font-blue bold uppercase">LOGIN NOW</span>
+                            <span class="caption-subject font-blue bold uppercase">ĐĂNG NHẬP</span>
                         </div>
                     </div>
                     <div class="portlet-body">
@@ -240,10 +228,10 @@
 								<input class="form-control form-control-solid placeholder-no-fix" type="password" autocomplete="off"
 									placeholder="Password" name="password"/>
 							</div>
-							<input type="checkbox" name="remember" value="1"/>Remember </label><br/><br/>
+							<input type="checkbox" name="remember" value="1"/>Nhớ đăng nhập </label><br/><br/>
 							<div class="form-actions">
 								<center><button type="submit" class="btn green uppercase" style="width:100%"
-									data-toggle="modal" data-target="#enroll-modal">Login</button></center>
+									data-toggle="modal" data-target="#enroll-modal">ĐĂNG NHẬP</button></center>
 								<label class="rememberme check">
 							</div>
 						</form>
@@ -256,7 +244,7 @@
                     <div class="portlet-title">
                         <div class="caption">
                             <i class="fa-area-chart font-blue"></i>
-                            <span class="caption-subject font-blue bold uppercase">Course Info.</span>
+                            <span class="caption-subject font-blue bold uppercase">CÁC KHÓA HỌC</span>
                         </div>
                     </div>
                     <div class="portlet-body">
@@ -265,8 +253,8 @@
                             <table class="table table-hover table-light">
                                 <thead>
                                 <tr class="uppercase">
-                                    <th width="80%"> Course name<br/><br/></th>
-                                    <th width="20%"> Num. Of Problems</th>
+                                    <th width="80%"> Tên khóa học<br/><br/></th>
+                                    <th width="20%"> Số bài tập</th>
                                 </tr>
                                 </thead>
                                 @foreach($coursetable as $course)
@@ -288,7 +276,7 @@
 		   <div class="portlet-title">
 			   <div class="caption">
 				   <i class="icon-share font-blue"></i>
-				   <span class="caption-subject font-blue bold uppercase">NOT SUBMITTED PROBLEMS</span>
+				   <span class="caption-subject font-blue bold uppercase">CÁC BÀI CHƯA THỬ LÀM</span>
 			   </div>
 		   </div>
 		   <div class="portlet-body">
@@ -298,8 +286,8 @@
 					   <thead>
 					   <tr class="uppercase">
 						   <th width="10%"></th>
-						   <th> Name</th>
-						   <th> Course</th>
+						   <th> Mã bài</th>
+						   <th> Khóa học</th>
 					   </tr>
 					   </thead>
 					   @foreach($unsubmittedProblems as $course)
@@ -329,7 +317,7 @@
 		   <div class="portlet-title">
 			   <div class="caption">
 				   <i class="icon-share font-blue"></i>
-				   <span class="caption-subject font-blue bold uppercase">SUMMARY</span>
+				   <span class="caption-subject font-blue bold uppercase">TÌNH TRẠNG HOÀN THÀNH</span>
 			   </div>
 		   </div>
 		   <div class="portlet-body">
@@ -338,20 +326,20 @@
 				   <table class="table table-hover table-light">
 					   <thead>
 					   <tr class="uppercase">
-						   <th> Course</th>
-						   <th> Remain</th>
-						   <th> Rate</th>
+						   <th> Khóa học</th>
+						   <th> Chưa làm</th>
+						   <th> Tỷ lệ</th>
 					   </tr>
 					   </thead>
 					   @foreach($coursesummary as $course)
 						   <tr>
 							   <td>
-								   <a href="{{url('/my-courses/'.$course->courseId)}}">
+								   <a href="{{url('/my-courses/'.$course->courseId.'/problems/')}}">
 									{{$course->courseName}}
 								</a>
 							   </td>
 							<td> 
-								{{$course->numOfProblem - $course->numOfDoneProblem}} problems
+								{{$course->numOfProblem - $course->numOfDoneProblem}} bài
 							</td>
 							   <td>
 								   {{round(($course->numOfDoneProblem*100/$course->numOfProblem), 2)}}%
