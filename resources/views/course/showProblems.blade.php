@@ -56,6 +56,11 @@
 	#no-more-tables td:before { content: attr(data-title); }
 }
 </style>
+	<style>
+		.animate {
+			opacity:0;
+		}
+	</style>
 @endsection
 
 @section('script')
@@ -64,7 +69,7 @@
             toastr.success("Gnome & Growl type non-blocking notifications", "Toastr Notifications");
         });
 
-		showAnimation(".animate", "fadeInRight");
+		showAnimation(".animate", "fadeInUp");
 		
 		function animateView(element, delay, animClass) {
 			setTimeout(function() {
@@ -129,7 +134,7 @@
 									$finished = $problemsolveresult[0]->finishedUser.' người';
 								}
 							@endphp
-                            <tr>
+                            <tr class="animate">
                                 @php
                                     $startIndex = ($problems->currentPage()-1) * $problems->perPage();
                                 @endphp
