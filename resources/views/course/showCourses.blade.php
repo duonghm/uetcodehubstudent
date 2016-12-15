@@ -10,7 +10,7 @@
         <div class="portlet-title">
             <div class="caption">
                 <i class=" icon-layers font-green"></i>
-                <span class="caption-subject font-green bold uppercase">My Courses</span>
+                <span class="caption-subject font-green bold uppercase">Khóa học của tôi</span>
             </div>
         </div>
         <div class="portlet-body">
@@ -22,7 +22,6 @@
                             <th>Tên khóa học</th>
                             <th>Giảng viên</th>
                             <th>Mô tả</th>
-                            <th>Hành động</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -33,21 +32,6 @@
                                 </td>
                                 <td> {{$course->lecturer}} </td>
                                 <td> {{$course->description}} </td>
-                                <td>
-                                    {!! Form::open([
-                                        'action' => array('CourseController@leaveCourse', $course->courseId),
-                                        'class' => 'form-horizontal',
-                                        'method' => 'post',
-                                    ]) !!}
-
-                                    <div>
-                                        <button type="submit" class="btn btn-danger">
-                                            Rút khỏi lớp
-                                        </button>
-                                    </div>
-
-                                    {!! Form::close() !!}
-                                </td>
                             </tr>
                         @endforeach
                         </tbody>

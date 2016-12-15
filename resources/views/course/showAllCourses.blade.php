@@ -10,7 +10,7 @@
         <div class="portlet-title">
             <div class="caption">
                 <i class=" icon-layers font-green"></i>
-                <span class="caption-subject font-green bold uppercase">All Courses</span>
+                <span class="caption-subject font-green bold uppercase">Đăng ký thêm</span>
             </div>
         </div>
         <div class="portlet-body">
@@ -54,7 +54,7 @@
                             <td>{{$course->semester->semesterName}}</td>
                             @if (!$course->joined)
                                 <td>
-                                    <a data-toggle="modal" data-target="#enroll-modal-{{$course->courseId}}">Tham gia</a>
+                                    <button class="btn btn-primary" data-toggle="modal" data-target="#enroll-modal-{{$course->courseId}}">Tham gia</button>
                                     <div class="modal fade" id="enroll-modal-{{$course->courseId}}" role="dialog">
                                         <div class="modal-dialog">
                                             <div class="modal-content">
@@ -92,7 +92,42 @@
                                 </td>
                             @else
                                 <td>
-                                    Đã tham gia
+                                    {!! Form::close() !!}
+									<button class="btn btn-danger" data-toggle="modal" data-target="#enroll-modal-{{$course->courseId}}">Rút khỏi lớp</button>
+                                    <div class="modal fade" id="enroll-modal-{{$course->courseId}}" role="dialog">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close"
+                                                            data-dismiss="modal">&times;</button>
+                                                    <h4 class="modal-title">Xác nhận tham gia</h4>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <p>Bạn muốn tham gia lớp {{$course->courseName}}?</p>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    {!! Form::open([
+														'action' => array('CourseController@leaveCourse', $course->courseId),
+														'class' => 'form-horizontal',
+														'method' => 'post',
+													]) !!}
+                                                    <div class="form-group">
+                                                        <div>
+                                                            <button type="submit" class="btn btn-danger">
+                                                                Rút khỏi lớp
+                                                            </button>
+                                                            <button type="button" class="btn btn-default"
+                                                                    data-dismiss="modal">
+                                                                Hủy bỏ
+                                                            </button>
+
+                                                        </div>
+                                                    </div>
+                                                    {!! Form::close() !!}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </td>
                             @endif
                         </tr>
