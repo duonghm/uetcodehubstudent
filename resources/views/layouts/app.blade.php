@@ -229,10 +229,10 @@
 <!-- BEGIN FOOTER -->
 <div class="page-footer">
     <div class="page-footer-inner"> &copy; <?php 
-$copyYear = 2016; 
-$curYear = date('Y'); 
-echo $copyYear . (($copyYear != $curYear) ? '-' . $curYear : '');
-?> UETCodehub
+		$copyYear = 2016; 
+		$curYear = date('Y'); 
+		echo $copyYear . (($copyYear != $curYear) ? '-' . $curYear : '');
+		?> UETCodehub
     </div>
     <div class="scroll-to-top">
         <i class="icon-arrow-up"></i>

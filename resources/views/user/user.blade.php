@@ -2,13 +2,20 @@
 
 @section('extendedHead')
     <link href="{{URL('assets/pages/css/profile.min.css')}}" rel="stylesheet" type="text/css"/>
+	<script src="{{URL::asset('js/codehub/animate.js')}}" type="text/javascript"></script>
+@endsection
+
+@section('script')
+    <script type="text/javascript">
+		showAnimation(".animate", "fadeInUp");
+    </script>
 @endsection
 
 @section('content')
     <div class="row">
 		<div class="col-md-6">
 		<div class="row">
-			<div class="col-md-12">
+			<div class="col-md-12 animate">
 				<!-- BEGIN PROFILE SIDEBAR -->
 					<!-- PORTLET MAIN -->
 					<div class="portlet light ">
@@ -42,7 +49,7 @@
             <!-- END BEGIN PROFILE SIDEBAR -->
             <div class="col-md-12">
                 <!-- BEGIN PORTLET -->
-                <div class="portlet light ">
+                <div class="portlet light animate">
                     <div class="portlet-title">
                         <div class="caption caption-md">
                             <i class="icon-bar-chart theme-font hide"></i>
@@ -110,7 +117,7 @@
 	</div>
                     <div class="col-md-6">
                         <!-- BEGIN PORTLET -->
-                        <div class="portlet light ">
+                        <div class="portlet light animate">
                             <div class="portlet-title tabbable-line">
                                 <div class="caption caption-md">
                                     <i class="icon-globe theme-font hide"></i>

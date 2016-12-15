@@ -5,87 +5,16 @@
 {{--@endsection--}}
 
 @section('extendedHead')
-<style>
-@media only screen and (max-width: 800px) {
-	
-	/* Force table to not be like tables anymore */
-	#no-more-tables table, 
-	#no-more-tables thead, 
-	#no-more-tables tbody, 
-	#no-more-tables th, 
-	#no-more-tables td, 
-	#no-more-tables tr { 
-		display: block; 
-	}
- 
-	/* Hide table headers (but not display: none;, for accessibility) */
-	#no-more-tables thead tr { 
-		position: absolute;
-		top: -9999px;
-		left: -9999px;
-	}
- 
-	#no-more-tables tr { border: 1px solid #ccc; }
- 
-	#no-more-tables td { 
-		/* Behave  like a "row" */
-		border: none;
-		border-bottom: 1px solid #eee; 
-		position: relative;
-		padding-left: 50%; 
-		white-space: normal;
-		text-align:left;
-	}
- 
-	#no-more-tables td:before { 
-		/* Now like a table header */
-		position: absolute;
-		/* Top/left values mimic padding */
-		top: 6px;
-		left: 6px;
-		width: 45%; 
-		padding-right: 10px; 
-		white-space: nowrap;
-		text-align:left;
-		font-weight: bold;
-	}
- 
-	/*
-	Label the data
-	*/
-	#no-more-tables td:before { content: attr(data-title); }
-}
-</style>
-	<style>
-		.animate {
-			opacity:0;
-		}
-	</style>
 @endsection
 
 @section('script')
+	<script src="{{URL::asset('js/codehub/animate.js')}}" type="text/javascript"></script>
     <script type="text/javascript">
         $('#btn').click(function () {
             toastr.success("Gnome & Growl type non-blocking notifications", "Toastr Notifications");
         });
 
 		showAnimation(".animate", "fadeInUp");
-		
-		function animateView(element, delay, animClass) {
-			setTimeout(function() {
-				element.addClass(animClass+' animated');
-				element.css({"opacity": "1"});
-			}, delay);
-		}
-		
-		function showAnimation(elemClass, animClass) {
-			var del = 0;
-			$(elemClass).each( function() {
-				del += 100;
-				$(this).css({"opacity": "0"});
-				animateView($(this), del, animClass);
-			});
-		}
     </script>
 @endsection
 

@@ -1,11 +1,6 @@
 @extends('layouts.app')
 
 @section('extendedHead')
-	<style>
-		.animate {
-			opacity:0;
-		}
-	</style>
 @endsection
 
 @section('pageScript')
@@ -14,6 +9,8 @@
     <script src="{{URL::asset('assets/global/plugins/counterup/jquery.waypoints.min.js')}}"
             type="text/javascript"></script>
     <script src="{{URL::asset('assets/global/plugins/counterup/jquery.counterup.min.js')}}"
+            type="text/javascript"></script>
+	<script src="{{URL::asset('js/codehub/animate.js')}}"
             type="text/javascript"></script>
 
 
@@ -26,22 +23,6 @@
         });
 
 		showAnimation(".animate", "fadeInUp");
-		
-		function animateView(element, delay, animClass) {
-			setTimeout(function() {
-				element.addClass(animClass+' animated');
-				element.css({"opacity": "1"});
-			}, delay);
-		}
-		
-		function showAnimation(elemClass, animClass) {
-			var del = 0;
-			$(elemClass).each( function() {
-				del += 100;
-				$(this).css({"opacity": "0"});
-				animateView($(this), del, animClass);
-			});
-		}
     </script>
 @endsection
 
@@ -116,7 +97,7 @@
                         </div>
                         <div class="desc"> Tổng điểm</div>
                     </div>
-                    <a class="more" href=""> Xem thêm
+                    <a class="more" href="{{url('/user')}}"> Xem thêm
                         <i class="m-icon-swapright m-icon-white"></i>
                     </a>
                 </div>
