@@ -62,7 +62,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title"> Change Password </h4>
+                    <h4 class="modal-title"> Đổi mật khẩu </h4>
                 </div>
                 <!--dialog body-->
                 <div class="modal-body">
@@ -73,18 +73,19 @@
                             <div class="col-md-12">
                                 <div class="input-group">
                                     <input id="txtCurrentPass" type="password" class="form-control" aria-required="true"
-                                           placeholder="Current Password">
+                                           placeholder="Mật khẩu hiện tại">
                                                         <span class="input-group-addon">
                                                             <i class="fa fa-user"></i>
                                                         </span>
                                 </div>
                             </div>
                         </div>
+						<br/>
                         <div class="form-group">
                             <div class="col-md-12">
                                 <div class="input-group">
                                     <input id="txtNewPass" type="password" class="form-control" aria-required="true"
-                                           placeholder="New Password">
+                                           placeholder="Mật khẩu mới">
                                                         <span class="input-group-addon">
                                                             <i class="fa fa-user"></i>
                                                         </span>
@@ -95,7 +96,7 @@
                             <div class="col-md-12">
                                 <div class="input-group">
                                     <input id="txtConfirm" type="password" class="form-control" aria-required="true"
-                                           placeholder="Confirm Password">
+                                           placeholder="Nhập lại 1 lần nữa">
                                                         <span class="input-group-addon">
                                                             <i class="fa fa-user"></i>
                                                         </span>
@@ -113,8 +114,8 @@
                 </div>
                 <!--dialog buttons-->
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Change</button>
-                    <button type="button" class="btn default" data-dismiss="modal"> Cancel</button>
+                    <button type="submit" class="btn btn-primary"> Đổi </button>
+                    <button type="button" class="btn default" data-dismiss="modal">Thoát</button>
                 </div>
             </div>
         </div>
