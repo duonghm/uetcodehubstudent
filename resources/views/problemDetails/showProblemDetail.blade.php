@@ -18,8 +18,8 @@
         $('#hide-btn').click(function(){
             $('#problemTitle').toggle(300);
 			hide = !hide;
-			if (hide) $('#hide-btn').html("<b><i class=\"fa fa-angle-down\"></i> Show</b>");
-			else $('#hide-btn').html("<b><i class=\"fa fa-angle-up\"></i> Hide</b>");
+			if (hide) $('#hide-btn').html("<b><i class=\"fa fa-angle-down\"></i> Hiện đề bài</b>");
+			else $('#hide-btn').html("<b><i class=\"fa fa-angle-up\"></i> Ẩn đề bài</b>");
         })
     </script>
 @endsection
@@ -126,7 +126,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Source Code</h4>
+                    <h4 class="modal-title">Mã nguồn</h4>
                 </div>
                 <!-- dialog body -->
                 <div class="modal-body">
@@ -135,8 +135,8 @@
                 </div>
                 <!-- dialog buttons -->
                 <div class="modal-footer">
-					<button type="button" class="btn btn-primary" data-dismiss="modal" id="copybtn">Copy all</button>
-					<button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
+					<button type="button" class="btn btn-primary" data-dismiss="modal" id="copybtn">Copy tất cả</button>
+					<button type="button" class="btn btn-primary" data-dismiss="modal">Thoát</button>
 				</div>
             </div>
         </div>
@@ -148,7 +148,7 @@
                 <div class="portlet-title">
 
                     <div class="caption">
-						<button type="button" id="backbtn" class="btn btn-primary"><i class="fa fa-arrow-left"></i> BACK </button>
+						<button type="button" id="backbtn" class="btn btn-primary"><i class="fa fa-arrow-left"></i> QUAY LẠI </button>
 						&nbsp&nbsp
                         <span class="caption-subject font-blue bold uppercase">
                             {{$problem->problemCode}}
@@ -157,7 +157,7 @@
                 </div>
                 <div id="problemTitle" class="portlet-body">
                     <div class="box" id="problem-content" style="min-height: 10px;">
-                        <div style="background: #E0E0E0; margin-top: 10px; font-weight: bold">Problem statement</div>
+                        <div style="background: #E0E0E0; margin-top: 10px; font-weight: bold">Yêu cầu đề bài</div>
                         <div class="box-content" style="text-align: justify; font-family: monospace;">
                             {!! $problem->content !!}
                         </div>
@@ -174,10 +174,10 @@
                             </div>
                             <div style="clear: both;"></div>
                         </div>
-                    </div>
-                </div>
+                    </div><br/>
+                </div>				
 				<center>
-					<span id="hide-btn" style="background-color: #eee;" class="btn"><b><i class="fa fa-angle-up"></i> Hide</b></span>
+					<span id="hide-btn" style="background-color: #eee;" class="btn"><b><i class="fa fa-angle-up"></i> Ẩn đề bài</b></span>
 				</center>
             </div>
 
@@ -188,7 +188,7 @@
                 <div class="portlet-body">
 				@if ($isExam)
 					<div style="float: right;font-family: inherit;font-weight: bold; color: cornflowerblue;">
-                        <span id="countDownTimer">Loading timer...</span>
+                        <span id="countDownTimer">Đang tải đồng hồ...</span>
                     </div>
 				@endif
                     <div class="box">
@@ -239,11 +239,11 @@
                                                 <div class="pull-right">
 													<button class="btn btn-primary" type="button" id="editorcopybtn"
 														style="margin-right: 2px;">
-                                                        COPY ALL
+                                                        COPY
                                                     </button>
                                                     <button class="btn btn-primary" type="submit"
                                                             id="submit-button">
-                                                        SUBMIT
+                                                        NỘP BÀI
                                                     </button>
                                                 </div>
                                             </div>
@@ -255,7 +255,7 @@
                                 <div role="tabpanel"
                                      class="tab-pane {{Session::get('is_submitted') == true ? 'active' : ''}}"
 									 id="result">
-                                    <div id="ajaxDemoContent">Demo content</div>
+                                    <div id="ajaxDemoContent"></div>
                                     {{--@include(url('/'))--}}
                                 </div>
 								<div role="tabpanel" id="debai">
