@@ -34,7 +34,8 @@ class Exam extends Model
         }*/
 //        $now = new \DateTime('now', new \DateTimeZone('Asia/Ho_Chi_Minh'));
         //$now = new \DateTime('now');
-        $now = date("Y-m-d H:i:s", strtotime('+7 hours'));
+        //$now = date("Y-m-d H:i:s", strtotime('+7 hours'));
+        $now = date("Y-m-d H:i:s");
         $now = strtotime ($now);
         $from = strtotime($this->availableFrom);
         $to = strtotime($this->availableTo);

@@ -124,9 +124,7 @@ class JudgeController extends Controller
             $this->submission->sourceCode = $request->input('sourceCode');
             $this->submission->save();
 
-            //$client = new \SoapClient("http://localhost:8080/CodehubJudgeAssistant/SubmitService?wsdl", array('cache_wsdl' => WSDL_CACHE_NONE));
             $client = new \SoapClient("http://localhost:8080/CodehubJudgeAssistant/SubmitService?wsdl", array('cache_wsdl' => WSDL_CACHE_NONE));
-            //$client = new \SoapClient("http://117.5.108.104:8080/CodehubJudgeAssistant/SubmitService?wsdl", array('cache_wsdl' => WSDL_CACHE_NONE));
             $submitData = new \stdClass();
             $submitData->userId = $this->submission->userId;
             $submitData->submitId = $this->submission->submitId;
@@ -162,7 +160,7 @@ class JudgeController extends Controller
                 $this->submission->save();
 
                 $client = new \SoapClient("http://localhost:8080/CodehubJudgeAssistant/SubmitService?wsdl", array('cache_wsdl' => WSDL_CACHE_NONE));
-                //$client = new \SoapClient("http://118.70.181.146:8080/CodehubJudgeAssistant/SubmitService?wsdl", array('cache_wsdl' => WSDL_CACHE_NONE));
+                //$client = new \SoapClient("http://171.234.220.65:8080/CodehubJudgeAssistant/SubmitService?wsdl", array('cache_wsdl' => WSDL_CACHE_NONE));
                 //$client = new \SoapClient("http://117.5.108.104:8080/CodehubJudgeAssistant/SubmitService?wsdl", array('cache_wsdl' => WSDL_CACHE_NONE));
                 $submitData = new \stdClass();
                 $submitData->userId = $this->submission->userId;

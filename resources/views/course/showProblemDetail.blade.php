@@ -180,7 +180,7 @@
                 $.ajax({
                     type: "POST",
                     url: "{{url('/submitPostAjax')}}",
-                    timeout: 5000,
+                    timeout: 20000,
                     data: {
                         sourceCode: _sourceCode,
                         language: _language,
@@ -214,6 +214,9 @@
         function showSource(source) {
             $('#sourceText')[0].innerText = source;
         }
+        function showComment(comment){
+            $('#commentText')[0].innerText = comment;
+        }
     </script>
 @stop
 @section('content')
@@ -228,6 +231,23 @@
                 <div class="modal-body">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                     <pre id="sourceText"></pre>
+                </div>
+                <!-- dialog buttons -->
+                <div class="modal-footer"><button type="button" class="btn btn-primary" data-dismiss="modal">OK</button></div>
+            </div>
+        </div>
+    </div>
+    <div id="commentModal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Teacher Comment</h4>
+                </div>
+                <!-- dialog body -->
+                <div class="modal-body">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <pre id="commentText"></pre>
                 </div>
                 <!-- dialog buttons -->
                 <div class="modal-footer"><button type="button" class="btn btn-primary" data-dismiss="modal">OK</button></div>

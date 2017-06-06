@@ -15,7 +15,7 @@
         </div>
         <div class="portlet-body">
             <div class="table-scrollable table-scrollable-borderless">
-                @if(sizeof($exams)>0)
+                @if(sizeof($exams)>0 && Auth::user()->isActive)
                 <table class="table table-hover table-light">
                     <thead>
                     <tr>

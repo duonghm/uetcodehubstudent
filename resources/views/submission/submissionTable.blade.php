@@ -62,6 +62,13 @@
                                     <span class="btn btn-primary" data-toggle="modal" data-target="#sourceModal"
                                           onclick="showSource({{$source}})">Get source</span>
                                 </td>
+                                <td>
+                                    <?php
+                                    $comment = $submission->comment != null ? json_encode($submission->comment) : 'No comment';
+                                    ?>
+                                    <span class="btn btn-primary" data-toggle="modal" data-target="#commentModal"
+                                          onclick="showComment('{{$comment}}')">Show Comment</span>
+                                </td>
                             </tr>
                         @endforeach
                     </table>

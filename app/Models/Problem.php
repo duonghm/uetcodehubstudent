@@ -46,6 +46,11 @@ class Problem extends Model
         return sizeof($p);
     }
 
+    public function numberOfSubmitedUserByCourse($courseId){
+        $p = Submission::where('problemId',$this->problemId)->where('courseId',$courseId)->groupBy('userId')->get([DB::raw('userId')]);
+        return sizeof($p);
+    }
+
     public function numberOfFinishedUser(){
         $row = DB::select(
             DB::raw(
@@ -61,6 +66,17 @@ class Problem extends Model
 
     public function numberOfFinishedUser2(){
         $submissions = Submission::where('problemId',$this->problemId)->groupBy('userId')->get(['userId', DB::raw('max(resultScore) as score')]);
+        $count = 0;
+        foreach ($submissions as $s){
+            if($s->score == $this->defaultScore){
+                $count++;
+            }
+        }
+        return $count;
+    }
+
+    public function numberOfFinishedUserByCourse($courseId){
+        $submissions = Submission::where('problemId',$this->problemId)->where('courseId',$courseId)->groupBy('userId')->get(['userId', DB::raw('max(resultScore) as score')]);
         $count = 0;
         foreach ($submissions as $s){
             if($s->score == $this->defaultScore){

@@ -40,12 +40,12 @@
                                 {{--<td>{{$p->pivot->hardLevel}}</td>--}}
                                 <td>{{$p->problemCode}}</td>
                                 <td>{{$p->defaultScore}}</td>
-                                <td>{{$p->numberOfSubmitedUser2()}} người</td>
+                                <td>{{$p->numberOfSubmitedUserByCourse($course->courseId)}} người</td>
                                 @php
                                     $problemScore = $p->getScoreOfUser($course->courseId);
                                 @endphp
                                 <td>
-                                    {{$p->numberOfFinishedUser2()}} người
+                                    {{$p->numberOfFinishedUserByCourse($course->courseId)}} người
                                 </td>
                                 <td>
                                     @if($problemScore == null)

@@ -1,5 +1,5 @@
 @if($remainTime < 0)
-    <span style="color: #e7505a">Hết giờ làm bài </span>
+    <span style="color: #e7505a">Hết giờ làm bài</span>
 @else
     @php
         $minute = floor($remainTime/60);

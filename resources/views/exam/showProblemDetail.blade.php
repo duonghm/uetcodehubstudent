@@ -198,7 +198,7 @@
                 $.ajax({
                     type: "POST",
                     url: "{{url('/submitExam')}}",
-                    timeout: 20000,
+                    timeout: 40000,
                     data: {
                         sourceCode: _sourceCode,
                         language: _language,
